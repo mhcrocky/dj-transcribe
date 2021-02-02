@@ -1,0 +1,69 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>NLP Service For Your Business</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+  <style type="text/css">
+    #videoThumbnail {
+      max-width: 100%;
+    }
+    .backdrop {
+      background-color: #7fc7d9;
+      background-image: url('/static/nlp_sponsored.jpg');
+      background-position: center;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: -2;
+      position: absolute;
+      background-size: cover;
+      background-repeat: no-repeat;
+    }
+    #root {
+      min-height: 90vh;
+    }
+    .backmask {
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      opacity: 0.5;
+      z-index: -1;
+      position: absolute;
+      background-color: #000;
+    }
+    .bg-primary-custom {
+      background-color: #3f51b5;
+    }
+    #brand-headline, #brand-headline-second {
+      color: white;
+      padding-top: 70px;
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-dark bg-primary-custom">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="/">NLP as a Service</a>
+    </div>
+  </nav>
+  <div id="root">
+    <div id="brand-headline" class="d-flex mx-auto">
+      <h1 class="display-2 mx-auto">Your order has been canceled.</h1>
+    </div>
+    <div id="brand-headline-second" class="d-flex mx-auto">
+      <h1 class="display-6 mx-auto">Get the full transcription of Youtube video now! <a href="/">Go to Home</a></h1>
+    </div>
+    <div class="backmask"></div>
+    <div class="backdrop"></div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
+</body>
+</html>

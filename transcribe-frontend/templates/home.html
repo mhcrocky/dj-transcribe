@@ -1,0 +1,156 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>YouTube Transcription Service</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+
+  <link rel="stylesheet" href="{% static 'css/legacy.css' %}">
+
+</head>
+<body>
+  <nav class="navbar navbar-dark bg-primary-custom">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="/">transcribe.lol</a>
+    </div>
+  </nav>
+  <div id="root">
+    <div id="brand-headline">
+      <h1 class="display-2">YouTube Transcription Service</h1><br/>
+      <h3 class="display-4">Accurate voice-to-text transcriptions at 0.99 usd/hour</h3>
+    </div>
+    
+
+    <div id="search-form" class="mx-auto mt-3" style="width: 50vw;">
+      <div class="input-group mb-3">
+        <form class="d-flex flex-fill">
+          <div class="input-group">
+            <input type="text" class="form-control input-lg" placeholder="Youtube Link" aria-label="Recipient's username" aria-describedby="buttonSearch" id="inputUrl" oninput="fetchVideoInfo(this.value)" />
+            <button class="btn btn-lg btn-primary" type="button" id="buttonSearch" disabled>Transcribe Now</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+
+    <div id="videoDetail" class="mx-auto mt-5 d-none" style="width: 80vw;">
+      <div class="card mb-3">
+        <div class="row g-0">
+          <div class="col-md-5 d-flex align-items-center">
+            <img src="" id="videoThumbnail">
+          </div>
+          <div class="col-md-7">
+            <div class="card-body">
+              <h5 class="card-title" id="videoTitle">Card title</h5>
+              <p class="card-text" id="videoDescription">
+              This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+              <p class="card-text"><small class="text-muted" id="videoAuthor">Last updated 3 mins ago</small></p>
+              <p class="card-text"><small class="text-muted" id="videoPublish">Last updated 3 mins ago</small></p>
+              <p class="card-text"><small class="text-muted" id="videoLength">Last updated 3 mins ago</small></p>
+              <p class="card-text"><small class="text-muted" id="videoPrice">Last updated 3 mins ago</small></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+    <div id="info-headline">
+      <div class="row">
+
+        <div class="col-sm-6">
+          <h4>There is only 24 hours in a day, your favorite podcasts won't wait.</h4>
+        </div>
+        
+        <div class="col-sm-6">
+          <h5>Fast</h5>
+          <ul>
+            <li>Never hear your podcast at 2x speed again</li>
+            <li>Find valuable content without listening</li>
+            <li>Fast transcripts for a fast world</li>
+            <li>Fast voice-to-text transcription</li>
+          </ul>
+      
+          <h5>Publish</h5>
+          <ul>
+            <li>Publish your podcast in written form</li>
+            <li>Upload transcripts to YouTube</li>
+            <li>Grow your audience</li>
+          </ul>
+          
+          <h5>Simple</h5>
+          <ul>
+            <li>Podcast transcriptions made simple</li>
+            <li>Submit a link, pay and get a transcription email</li>
+            <li>Delivered to your email via pdf, txt and srt</li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+
+
+    <div id="info-headline">
+
+      <h1>FAQ</h1><br/>
+      
+      (accordion)<br/><br/>
+
+      <h4>How long does a transcription take?</h4>
+      A transcription takes about 50% of the video time and will be delivered via email.<br/><br/>
+      
+      <h4>How will I get the transcript?</h4>
+      We send all transcripts to the email address you provide during checkout.<br/><br/>
+      
+      <h4>How accurate is your transcription service?</h4>
+      Our transcription service has an average WER (word error rate) below 10%.<br/><br/>
+      
+      <h4>How will the transcript look?</h4>
+      You will receive a pdf and a txt file that contain the transcript with useful annotations. 
+      See the following links (youtube link), (pdf), (txt) and (srt).<br/><br/>
+      
+      <h4>Which languages do you support?</h4>
+      Currently, we only support English. We are working on supporting other languages in the near future.<br/><br/>
+      
+      <h4>How can I reach you?</h4>
+      Send an email to hi@transcribe.lol to get in touch.<br/><br/>
+      
+      <h4>What happens if a transcription fails?</h4>
+      We will refund the entire amount if we cannot complete the order.<br/><br/>
+      
+      <h4>Can I transcribe videos that are not yet on YouTube?</h4>
+      Yes, to do so upload your video as unlisted to YouTube and provide us with the link for transcription.<br/><br/>
+      
+      <h4>Do you provide translation services?</h4>
+      We are working on providing translations in the near future.<br/><br/>
+
+    </div>
+
+
+    <div id="info-headline">
+
+      <h2>Get the latest updates from transcribe.lol</h2>
+      (Your Email > (mailchimp collect))<br/><br/>
+
+    </div>
+
+    <div id="brand-headline">
+    (C) 2021 transcribe.lol. All rights reserved. 
+    </div>
+
+    <!--
+    <div class="backmask"></div>
+    <div class="backdrop"></div>
+    -->
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
+  <script src="https://js.stripe.com/v3/"></script>
+  <script src="{% static 'main.js' %}"></script>
+</body>
+</html>
