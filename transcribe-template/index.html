@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿{% load static %}
+<!DOCTYPE html>
 <html class="no-js" lang="en">
 <head>
     <meta charset="utf-8" />
@@ -15,16 +16,16 @@
 
 
     <!--====== Font Awesome CSS ======-->
-    <link rel="stylesheet" href="assets/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="{% static 'assets/css/font-awesome.min.css'%}" />
 
     <!--====== Bootstrap CSS ======-->
-    <link rel="stylesheet" href="assets/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="{% static 'assets/css/bootstrap.min.css'%}" />
 
     <!--====== Default CSS ======-->
-    <link rel="stylesheet" href="assets/css/default.css" />
+    <link rel="stylesheet" href="{% static 'assets/css/default.css'%}" />
 
     <!--====== Style CSS ======-->
-    <link rel="stylesheet" href="assets/css/style.css" />
+    <link rel="stylesheet" href="{% static 'assets/css/style.css'%}" />
 </head>
 
 <body>
@@ -99,9 +100,9 @@
                                             <div class="form-group">
                                                 <input type="url" class="form-control" id="youtubeurl" placeholder="Your YouTube Link" />
                                             </div>
-                                            <img class="spinner-form" id="youtube_spinner" src="assets/images/spinner-load.svg" />
-                                            <img class="spinner-form-ok" id="youtube_spinner_ok" src="assets/images/check-icon.svg" />
-                                            <img class="spinner-form-error" id="youtube_spinner_error" src="assets/images/close-icon.svg" />
+                                            <img class="spinner-form" id="youtube_spinner" src="{% static 'assets/images/spinner-load.svg'%}" />
+                                            <img class="spinner-form-ok" id="youtube_spinner_ok" src="{% static 'assets/images/check-icon.svg'%}" />
+                                            <img class="spinner-form-error" id="youtube_spinner_error" src="{% static 'assets/images/close-icon.svg'%}" />
 
                                             <button class="main-btn wow fadeInUp btn-block" type="button" id="youtube_Submit">
                                                 <span class="youtube-price-lable" id="youtube_price">2.99$</span>
@@ -116,9 +117,9 @@
                                                 <span class="button">Choose</span>
                                                 <span class="label" data-js-label>No file selected</span>
                                             </div>
-                                            <img class="spinner-form-file" id="fileupload_spinner" src="assets/images/spinner-load.svg" />
-                                            <img class="spinner-form-ok-file" id="fileupload_spinner_ok" src="assets/images/check-icon.svg" />
-                                            <img class="spinner-form-error-file" id="fileupload_spinner_error" src="assets/images/close-icon.svg" />
+                                            <img class="spinner-form-file" id="fileupload_spinner" src="{% static 'assets/images/spinner-load.svg'%}" />
+                                            <img class="spinner-form-ok-file" id="fileupload_spinner_ok" src="{% static 'assets/images/check-icon.svg'%}" />
+                                            <img class="spinner-form-error-file" id="fileupload_spinner_error" src="{% static 'assets/images/close-icon.svg'%}" />
 
                                             <button class="main-btn wow btn-block" type="button" id="fileupload_Submit">
                                                 <span class="youtube-price-lable" id="fileupload_price">2.99$</span>
@@ -134,7 +135,7 @@
                     <div class="col-lg-6">
                         <div class="text-center">
                             <div class="header-hero-image text-center">
-                                <img src="assets/images/hero.svg" alt="hero" />
+                                <img src="{% static 'assets/images/hero.svg'%}" alt="hero" />
                             </div>
                         </div>
                     </div>
@@ -422,18 +423,18 @@
     </footer>
 
     <!--====== Jquery js ======-->
-    <script src="assets/js/jquery-1.12.4.min.js"></script>
+    <script src="{% static 'assets/js/jquery-1.12.4.min.js'%}"></script>
 
     <!--====== Bootstrap js ======-->
-    <script src="assets/js/popper.min.js"></script>
-    <script src="assets/js/bootstrap.min.js"></script>
+    <script src="{% static 'assets/js/popper.min.js'%}"></script>
+    <script src="{% static 'assets/js/bootstrap.min.js'%}"></script>
 
     <!--====== Plugins js ======-->
-    <script src="assets/js/plugins.js"></script>
+    <script src="{% static 'assets/js/plugins.js'%}"></script>
 
-    <script src="assets/js/jquery.matchHeight-min.js"></script>
+    <script src="{% static 'assets/js/jquery.matchHeight-min.js'%}"></script>
 
     <!--====== Main js ======-->
-    <script src="assets/js/main.js"></script>
+    <script src="{% static 'assets/js/main.js'%}"></script>
 </body>
 </html>
