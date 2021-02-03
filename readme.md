@@ -40,3 +40,15 @@ Inspiration
 * https://goya-template.webflow.io/
 * https://comma.ai/
 * https://soft-html-template.webflow.io/
+
+
+Docker
+======
+
+```
+docker build -t transcribe .
+docker run -it --rm -v /Users/philippbraun/Desktop/transcribe:/root -p 8000:8000 transcribe
+
+python3 manage.py runserver 0.0.0.0:8000
+python3 main.py
+```
