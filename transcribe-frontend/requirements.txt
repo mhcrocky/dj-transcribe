@@ -16,3 +16,5 @@ sqlparse==0.4.1
 typing-extensions==3.7.4.3
 whitenoise==5.2.0
 stripe==2.50.0
+WeasyPrint==52.2
+dominate==2.6.0
