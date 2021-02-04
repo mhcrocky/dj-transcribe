@@ -28,13 +28,13 @@
 
 @page {
   @top-left {
-    background: #fbc847;
+    background: #364def;
     content: counter(page);
     height: 1cm;
     text-align: center;
     width: 1cm; }
   @top-center {
-    background: #fbc847;
+    background: #364def;
     content: '';
     display: block;
     height: .05cm;
@@ -71,7 +71,7 @@
   margin: 0; }
 
 @page chapter {
-  background: #fbc847;
+  background: #364def;
   margin: 0;
   @top-left {
     content: none; }
@@ -87,7 +87,7 @@ html {
   font-weight: 300;
   line-height: 1.5; }
   html body h1 {
-    color: #fbc847;
+    color: #364def;
     font-size: 38pt;
     margin: 5cm 2cm 0 2cm;
     page: no-chapter;
@@ -110,7 +110,7 @@ html {
     flex-wrap: wrap;
     height: 297mm; }
     html body article#cover address {
-      background: #fbc847;
+      background: #364def;
       flex: 1 50%;
       margin: 0 -2cm;
       padding: 1cm 0;
@@ -129,7 +129,7 @@ html {
       font-weight: 500;
       margin: 3em 0 1em; }
       html body article#contents h3::before {
-        background: #fbc847;
+        background: #364def;
         content: '';
         display: block;
         height: .08cm;
@@ -143,7 +143,7 @@ html {
         margin: .25cm 0;
         padding-top: .25cm; }
         html body article#contents ul li::before {
-          color: #fbc847;
+          color: #364def;
           content: '• ';
           font-size: 40pt;
           line-height: 16pt;
@@ -154,7 +154,7 @@ html {
           html body article#contents ul li a::before {
             content: target-text(attr(href)); }
           html body article#contents ul li a::after {
-            color: #fbc847;
+            color: #364def;
             content: target-counter(attr(href), page);
             float: right; }
   html body article#columns section {
@@ -166,14 +166,14 @@ html {
       html body article#columns section p:first-of-type {
         font-weight: 700; }
   html body article#competences h3 {
-    background: #fbc847;
+    background: #364def;
     margin: 0 -3cm 1cm;
     padding: 1cm 1cm 1cm 3cm;
     width: 21cm; }
   html body article#competences section {
     padding: .5cm 0; }
     html body article#competences section#table-content::before {
-      background: url(table-content.svg) no-repeat center #fbc847;
+      background: url(table-content.svg) no-repeat center #364def;
       background-size: 50%;
       content: '';
       display: inline-block;
@@ -183,7 +183,7 @@ html {
       vertical-align: middle;
       width: 2cm; }
     html body article#competences section#heading::before {
-      background: url(heading.svg) no-repeat center #fbc847;
+      background: url(heading.svg) no-repeat center #364def;
       background-size: 50%;
       content: '';
       display: inline-block;
@@ -193,7 +193,7 @@ html {
       vertical-align: middle;
       width: 2cm; }
     html body article#competences section#multi-columns::before {
-      background: url(multi-columns.svg) no-repeat center #fbc847;
+      background: url(multi-columns.svg) no-repeat center #364def;
       background-size: 50%;
       content: '';
       display: inline-block;
@@ -203,7 +203,7 @@ html {
       vertical-align: middle;
       width: 2cm; }
     html body article#competences section#internal-links::before {
-      background: url(internal-links.svg) no-repeat center #fbc847;
+      background: url(internal-links.svg) no-repeat center #364def;
       background-size: 50%;
       content: '';
       display: inline-block;
@@ -213,7 +213,7 @@ html {
       vertical-align: middle;
       width: 2cm; }
     html body article#competences section#style::before {
-      background: url(style.svg) no-repeat center #fbc847;
+      background: url(style.svg) no-repeat center #364def;
       background-size: 50%;
       content: '';
       display: inline-block;
@@ -243,7 +243,7 @@ html {
         html body article#offers section ul li:not(:last-of-type) {
           margin: .5cm 0; }
       html body article#offers section p {
-        background: #fbc847;
+        background: #364def;
         display: block;
         font-size: 15pt;
         font-weight: 700;
