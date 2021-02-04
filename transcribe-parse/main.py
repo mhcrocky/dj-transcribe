@@ -23,14 +23,14 @@ def convertTimeZoneFromMiliSec(sec, isSrt=True):
         return mainResult
 
 
-def generateTxt(filename, words, isTimeStamp = True, interVal = 1):
+def generateTxt(words, isTimeStamp=True, interVal=1, filename="output"):
     """Generate a Text file from JSON file"""
     """ Param1: outputed srt file name """
     """ Param2: words: the words obtained from json file """
     """ Param3: isTimeStamp: Enable/Disable to add timestamp into txt file """
     """ Param4: interVal: interval minute such as every 5 minutes, 2 minutes, 1 minutes(default: 1 minute)"""
 
-    withFile = open("result/Txt/" + filename + ".txt", "w")
+    withFile = open("output/" + filename + ".txt", "w")
     if( isTimeStamp ):
         withFile.write("--00:00:00--\n")
 
@@ -64,7 +64,7 @@ def generateTxt(filename, words, isTimeStamp = True, interVal = 1):
 
     withFile.close()
 
-def generatePDF(filename, words, interVal = 1):
+def generatePDF(words, interVal=1, filename="output"):
     """Generate a PDF file from a string of HTML."""
     """ Param1: outputed srt file name """
     """ Param2: words: the words obtained from json file """
@@ -115,13 +115,13 @@ def generatePDF(filename, words, interVal = 1):
 
     html = Path('assets/input.html').read_text()
     pdf = makepdf(html)
-    Path('result/PDF/' + filename + '.pdf').write_bytes(pdf)
+    Path('output/' + filename + '.pdf').write_bytes(pdf)
 
-def generateSrt(filename, words):
+def generateSrt(words, filename="output"):
     """Generate a Srt file for video file."""
     """ Param1: outputed srt file name """
     """ Param2: words: the words obtained from json file """
-    srtFile = open("result/Srt/" + filename + ".srt", "w")
+    srtFile = open("output/" + filename + ".srt", "w")
     sentences = {}
     speaker = ""
     srtCnt = 1
@@ -172,14 +172,11 @@ def getRandomFileName():
 
 if __name__ == "__main__":
     jsonpath = "result.json"
-
-    """Generate a Html file from a string of HTML."""
     words = ParseJson(jsonpath)
 
-    """Call the txt function to make the two text file: with timestamp and without timestamp"""
-    generateTxt(getRandomFileName(), words, True)
-    generateTxt(getRandomFileName(), words, False)
-    generateSrt(getRandomFileName(), words)
-    generatePDF(getRandomFileName(), words)
+    generateTxt(words, isTimeStamp=True, filename="output")
+    generateTxt(words, isTimeStamp=False, filename="output-raw")
+    generateSrt(words)
+    generatePDF(words)
 
-    print('Success : All result files was located in result folder(PDF, Srt, Txt files)')
+    print('Success: Results are stored in the output folder')
