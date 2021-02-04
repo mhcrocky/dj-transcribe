@@ -69,18 +69,18 @@ def generatePDF(words, interVal=1, filename="output"):
     """ Param1: outputed srt file name """
     """ Param2: words: the words obtained from json file """
     """ Param3: interVal: interval minute such as every 5 minutes, 2 minutes, 1 minutes(default: 1 minute)"""
-    doc = dominate.document(title='Sentences')
+    doc = dominate.document(title='Transcription')
     with doc.head:
         link(rel='stylesheet', href='report.css')
 
     with doc:
         with article(id='cover'):
-            h1('senteces by interval')
-            address('Sentences of speakers was merged')
+            h1('Transcription')
+            address('https://www.youtube.com/watch?v=uRYcospQzzw')
 
     with doc:
         conthtml = article()
-        conthtml.add(h3('-----------00:00:00-----------'))
+        conthtml.add(h3('00:00:00'))
 
     sentences = {}
     speaker = ""
@@ -94,8 +94,8 @@ def generatePDF(words, interVal=1, filename="output"):
 
         if start > everycnt * 1000 * 60 * interVal:
             everycnt = everycnt + 1
-            resultStr = "\n-----------" + convertTimeZoneFromMiliSec(start, False) + "-----------\n"
-            conthtml.add(h3(resultStr))
+            resultStr = f"\n{convertTimeZoneFromMiliSec(start, False)}\n"
+            conthtml.add(h2(resultStr))
 
         if speaker != '' and speaker != word['speaker']:
             innerStr = "Speaker " + speaker + " : " + sentences[speaker] + "\n"

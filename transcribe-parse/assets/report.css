@@ -29,6 +29,7 @@
 @page {
   @top-left {
     background: #364def;
+    color: #fff;
     content: counter(page);
     height: 1cm;
     text-align: center;
@@ -66,9 +67,16 @@
     content: none; } }
 
 @page :first {
-  background: url(report-cover.jpg) no-repeat center;
-  background-size: cover;
+  /*background: url(report-cover.jpg) no-repeat center;
+  background-size: cover;*/
   margin: 0; }
+
+
+h2 {
+  background: #364def;
+  color: #fff !important;
+  display: block;
+}
 
 @page chapter {
   background: #364def;
@@ -111,6 +119,7 @@ html {
     height: 297mm; }
     html body article#cover address {
       background: #364def;
+      color: #fff;
       flex: 1 50%;
       margin: 0 -2cm;
       padding: 1cm 0;
