@@ -41,12 +41,13 @@
     height: .05cm;
     opacity: .5;
     width: 100%; }
-  @top-right {
+  /* @top-right {
     content: string(heading);
     font-size: 9pt;
     height: 1cm;
     vertical-align: middle;
-    width: 100%; } }
+    width: 100%; }  */
+  }
 
 @page :blank {
   @top-left {
@@ -71,11 +72,25 @@
   background-size: cover;*/
   margin: 0; }
 
-
+/* custom changes*/
 h2 {
   background: #364def;
   color: #fff !important;
-  display: block;
+  padding: 0.2cm 0.4cm !important;
+  font-size: 18pt !important;
+  font-weight: bold !important;
+}
+body {
+  margin: 0 !important;
+}
+#left-col {
+  width: 3cm;
+  vertical-align: top;
+  font-weight: bold;
+}
+table {
+  width: 100%;
+  font-size: 14pt;
 }
 
 @page chapter {

@@ -80,7 +80,9 @@ def generatePDF(words, interVal=1, filename="output"):
 
     with doc:
         conthtml = article()
-        conthtml.add(h3('00:00:00'))
+        conthtml.add(h2('00:00:00'))
+        tblhtml = conthtml.add(table())
+
 
     sentences = {}
     speaker = ""
@@ -96,10 +98,12 @@ def generatePDF(words, interVal=1, filename="output"):
             everycnt = everycnt + 1
             resultStr = f"\n{convertTimeZoneFromMiliSec(start, False)}\n"
             conthtml.add(h2(resultStr))
+            tblhtml = conthtml.add(table())
 
         if speaker != '' and speaker != word['speaker']:
-            innerStr = "Speaker " + speaker + " : " + sentences[speaker] + "\n"
-            conthtml.add(h3(innerStr))
+            speakerLeft = "Speaker " + speaker + "\n"
+            speakerRight =  sentences[speaker] + "\n"
+            tblhtml.add(tr([td(speakerLeft, id="left-col"), td(speakerRight, id="right-col")]))
             sentences[speaker] = ''
 
         speaker = word['speaker']
@@ -109,6 +113,8 @@ def generatePDF(words, interVal=1, filename="output"):
         else:
             original = ''
         sentences.update({speaker: original + text + ' '})
+
+        # conthtml.add(tblhtml)
 
     with open('assets/input.html', 'w') as f:
         f.write(doc.render())
