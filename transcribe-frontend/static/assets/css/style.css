@@ -1886,6 +1886,15 @@ a, a:hover {
     background: #fff;
 }
 
+.spinner-icon-box {
+    position: absolute;
+    top: 232px;
+    right: 140px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+}
+
 .spinner-form {
     width: 58px;
     position: absolute;
@@ -1896,41 +1905,26 @@ a, a:hover {
 
 .spinner-form-ok {
     width: 35px;
-    position: absolute;
-    top: 248px;
-    right: 62px;
     display: none;
 }
 
 .spinner-form-error {
     width: 25px;
-    position: absolute;
-    top: 249px;
-    right: 64px;
     display: none;
 }
 
 .spinner-form-file {
     width: 58px;
-    position: absolute;
-    top: 232px;
-    right: 137px;
     display: none;
 }
 
 .spinner-form-ok-file {
     width: 35px;
-    position: absolute;
-    top: 248px;
-    right: 152px;
     display: none;
 }
 
 .spinner-form-error-file {
     width: 25px;
-    position: absolute;
-    top: 249px;
-    right: 154px;
     display: none;
 }
 

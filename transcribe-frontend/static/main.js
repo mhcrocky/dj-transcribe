@@ -99,3 +99,123 @@ String.prototype.toHHMM = function () {
     if (seconds < 10) {seconds = "0" + seconds;}
     return hours + ':' + minutes;
 }
+
+
+//========= YouTube Form =========//
+    $("#youtubeLink").bind('paste', function (e) {
+        resetYoutubeFormState();
+
+        $("#youtube_spinner").fadeIn();
+
+        // var successfullTranscribe = transcribe();
+        // setTimeout(function () {
+        //     if (successfullTranscribe) {
+        //         $("#youtube_spinner").fadeOut();
+        //         $("#youtube_spinner_ok").fadeIn();
+        //         $("#youtube_Submit").addClass("text-left");
+        //         $("#youtube_price").fadeIn();
+        //     }
+        //     else {
+        //         $("#youtube_spinner").fadeOut();
+        //         $("#youtube_spinner_error").fadeIn();
+        //     }
+        // }, 3000);
+
+    });
+
+
+    function resetYoutubeFormState(){
+        $("#youtube_spinner_ok").hide();
+        $("#youtube_spinner_error").hide();
+        $("#youtube_Submit").removeClass("text-left");
+        $("#youtube_price").hide();
+    }
+//========= File Upload Form =========//
+
+//========= File Upload Form =========//
+    $("#fileURL").change(function (e) {
+        resetFileUploadFormState();
+
+        $("#fileUpload_spinner").fadeIn();
+
+        const target = e.currentTarget;
+        const file = target.files[0];
+        if (target.files && file) {
+            const fileType = file.type
+            console.log("Type: " + fileType);
+            const isAudio = checkIsAudio(fileType)
+            if (isAudio) {
+                const reader = new FileReader();
+                reader.onload = function (event) {
+                    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    audioContext.decodeAudioData(event.target.result, function(buffer) {
+                        const duration = buffer.duration;
+                        const formattedDuration = formatTime(duration)
+                        console.log("The duration of the song is of: " + formattedDuration + " seconds");
+
+                        showSuccessState(formattedDuration)
+                    });
+                };
+
+                reader.onerror = function (event) {
+                    console.error("An error occurred reading the file: ", event);
+                    showFailState()
+                };
+
+                reader.readAsArrayBuffer(file);
+            } else {
+                showFailState()
+            }
+        } else {
+            $("#fileUpload_spinner").fadeOut();
+        }
+    });
+
+    const checkIsAudio = (fileType) => {
+        switch (fileType) {
+            case 'audio/mpeg':
+            case 'audio/wav':
+            case 'audio/ogg':
+                return true;
+        }
+
+        return false;
+    }
+
+    const showSuccessState = (duration) => {
+        $("#fileUpload_spinner").fadeOut();
+        $("#fileUpload_spinner_ok").fadeIn();
+        $("#fileUpload_Submit").addClass("text-left");
+        $("#fileUpload_price").fadeIn();
+
+        $("#fileUpload .media-duration").text(duration)
+    }
+
+    const showFailState = () => {
+        $("#fileUpload_spinner").fadeOut();
+        $("#fileUpload_spinner_error").fadeIn();
+        $("#fileUpload .media-duration").text('')
+    }
+
+    function resetFileUploadFormState() {
+        $("#fileUpload_spinner_ok").hide();
+        $("#fileUpload_spinner_error").hide();
+        $("#fileUpload_Submit").removeClass("text-left");
+        $("#fileUpload_price").hide();
+
+        $("#fileUpload .media-duration").text('')
+    }
+
+    const formatTime = (duration) => {
+        const sec_num = parseInt(duration, 10); // don't forget the second param
+        let hours   = Math.floor(sec_num / 3600);
+        let minutes = Math.floor((sec_num - (hours * 3600)) / 60);
+        let seconds = sec_num - (hours * 3600) - (minutes * 60);
+
+        if (hours   < 10) {hours   = "0" + hours;}
+        if (minutes < 10) {minutes = "0" + minutes;}
+        if (seconds < 10) {seconds = "0" + seconds;}
+
+        return hours + ':' + minutes + ':' + seconds;
+    }
+//========= File Upload Form =========//
