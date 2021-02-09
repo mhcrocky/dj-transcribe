@@ -84,19 +84,7 @@ String.prototype.toHHMM = function () {
     return hours + ':' + minutes;
 }
 
-
-//========= YouTube Form =========//
-function resetYoutubeFormState(){
-    $("#youtube_spinner_ok").hide();
-    $("#youtube_spinner_error").hide();
-    $("#youtube_Submit").removeClass("text-left");
-    $("#youtube_price").hide();
-
-    $("#youtubeSearch .media-duration").text('')
-}
-//========= YouTube Form =========//
-
-//========= File Upload Form =========//
+//========= YouTube && File Upload Form =========//
 const checkIsAudio = (fileType) => {
     switch (fileType) {
         case 'audio/mpeg':
@@ -117,6 +105,19 @@ const checkIsVideo = (fileType) => {
     }
 
     return false;
+}
+
+const formatTime = (sec) => {
+    const sec_num = parseInt(sec, 10); // don't forget the second param
+    let hours   = Math.floor(sec_num / 3600);
+    let minutes = Math.floor((sec_num - (hours * 3600)) / 60);
+    let seconds = sec_num - (hours * 3600) - (minutes * 60);
+
+    if (hours   < 10) {hours   = "0" + hours;}
+    if (minutes < 10) {minutes = "0" + minutes;}
+    if (seconds < 10) {seconds = "0" + seconds;}
+
+    return hours + ':' + minutes + ':' + seconds;
 }
 
 const showSuccessState = (duration, media_source='youtube') => {
@@ -157,7 +158,7 @@ const showFailState = (media_source='youtube') => {
     }
 }
 
-function resetFileUploadFormState() {
+const resetFileUploadFormState = () => {
     $("#fileUpload_spinner_ok").hide();
     $("#fileUpload_spinner_error").hide();
     $("#fileUpload_Submit").removeClass("text-left");
@@ -166,16 +167,11 @@ function resetFileUploadFormState() {
     $("#fileUpload .media-duration").text('')
 }
 
-const formatTime = (sec) => {
-    const sec_num = parseInt(sec, 10); // don't forget the second param
-    let hours   = Math.floor(sec_num / 3600);
-    let minutes = Math.floor((sec_num - (hours * 3600)) / 60);
-    let seconds = sec_num - (hours * 3600) - (minutes * 60);
+const resetYoutubeFormState = () => {
+    $("#youtube_spinner_ok").hide();
+    $("#youtube_spinner_error").hide();
+    $("#youtube_Submit").removeClass("text-left");
+    $("#youtube_price").hide();
 
-    if (hours   < 10) {hours   = "0" + hours;}
-    if (minutes < 10) {minutes = "0" + minutes;}
-    if (seconds < 10) {seconds = "0" + seconds;}
-
-    return hours + ':' + minutes + ':' + seconds;
+    $("#youtubeSearch .media-duration").text('')
 }
-//========= File Upload Form =========//
