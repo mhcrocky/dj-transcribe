@@ -73,9 +73,9 @@ def retrieve_ytvideo_info(request):
             response = JsonResponse(video_info, safe=False)
             return response
         except:  
-            print("Connection Error") #to handle exception
+            print("Connection Error")   # to handle exception
             message = 'Bad request' 
-            response = JsonResponse({'status':'false','message':message}, status=400)
+            response = JsonResponse({'status': 'error', 'message': message}, status=400)
             return response
         
 

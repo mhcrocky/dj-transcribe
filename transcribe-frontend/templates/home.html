@@ -86,7 +86,7 @@
                                 <!-- Nav pills -->
                                 <ul class="nav nav-pills" role="tablist">
                                     <li class="nav-item">
-                                        <a class="nav-link active matchHeight" data-toggle="pill" href="#youtube">YouTube Link</a>
+                                        <a class="nav-link active matchHeight" data-toggle="pill" href="#youtubeSearch">YouTube Link</a>
                                     </li>
                                     <li class="nav-item">
                                         <a class="nav-link matchHeight" data-toggle="pill" href="#fileUpload">Audio & Video Upload</a>
@@ -95,25 +95,26 @@
 
                                 <!-- Tab panes -->
                                 <div class="tab-content">
-                                    <div id="youtube" class="tab-pane active">
+                                    <div id="youtubeSearch" class="tab-pane active">
                                         <form>
                                             <div class="form-group">
                                                 <!-- <input type="url" class="form-control" id="youtubeurl" placeholder="Your YouTube Link" /> -->
-                                                <input type="text" id="youtubeLink" class="form-control input-lg" placeholder="Youtube Link" aria-label="Recipient's username" aria-describedby="buttonSearch" id="inputUrl" oninput="fetchVideoInfo(this.value)" />
+                                                <input type="text" id="youtubeURL" class="form-control input-lg" placeholder="Youtube Link" aria-label="Recipient's username" aria-describedby="buttonSearch" />
                                             </div>
-                                            <img class="spinner-form" id="youtube_spinner" src="{% static 'assets/images/spinner-load.svg'%}" />
-                                            <img class="spinner-form-ok" id="youtube_spinner_ok" src="{% static 'assets/images/check-icon.svg'%}" />
-                                            <img class="spinner-form-error" id="youtube_spinner_error" src="{% static 'assets/images/close-icon.svg'%}" />
-                                            
+                                            <div class="spinner-icon-box">
+                                                <img class="spinner-form" id="youtube_spinner" src="{% static 'assets/images/spinner-load.svg'%}" />
+                                                <img class="spinner-form-ok" id="youtube_spinner_ok" src="{% static 'assets/images/check-icon.svg'%}" />
+                                                <img class="spinner-form-error" id="youtube_spinner_error" src="{% static 'assets/images/close-icon.svg'%}" />
+                                                <span class="media-duration px-2"></span>
+                                            </div>
                                             <!-- <button class="main-btn wow fadeInUp btn-block" type="button" id="youtube_Submit">
                                                 <span class="youtube-price-lable" id="youtube_price">2.99$</span>
                                                 Transcribe Now
                                             </button> -->
-                                            <button class="btn btn-lg btn-primary" type="button" id="buttonSearch" >
+                                            <button class="btn main-btn wow btn-block" type="button" id="youtube_Submit" >
                                                 <span class="youtube-price-lable" id="youtube_price">2.99$</span>
                                                 Transcribe Now
                                             </button>
-
                                         </form>
                                         <div id="videoDetail" class="mx-auto mt-5 d-none" >
                                             <img src="" id="videoThumbnail">
@@ -139,7 +140,7 @@
                                                 <img class="spinner-form-error-file" id="fileUpload_spinner_error" src="{% static 'assets/images/close-icon.svg'%}" />
                                                 <span class="media-duration px-2"></span>
                                             </div>
-                                            <button class="main-btn wow btn-block" type="button" id="fileUpload_Submit">
+                                            <button class="btn main-btn wow btn-block" type="button" id="fileUpload_Submit">
                                                 <span class="youtube-price-lable" id="fileUpload_price">2.99$</span>
                                                 Transcribe Now
                                             </button>
@@ -458,7 +459,66 @@
     <!--====== Main js ======-->
     <script src="{% static 'assets/js/main.js'%}"></script>
     <script src="https://js.stripe.com/v3/"></script>
-<script src="{% static 'main.js' %}"></script>
+    <script src="{% static 'main.js' %}"></script>
 
+    <script>
+        $(function () {
+            $("#fileURL").change(function (e) {
+                resetFileUploadFormState();
+
+                const target = e.currentTarget;
+                let file = target.files[0];
+                if (target.files && file) {
+                    $("#fileUpload_spinner").fadeIn();
+
+                    const fileType = file.type
+                    console.log("Type: " + fileType);
+                    const isAudio = checkIsAudio(fileType)
+                    const isVideo = checkIsVideo(fileType)
+                    if (isAudio || isVideo) {
+                        const reader = new FileReader();
+                        reader.onload = function (event) {
+                            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                            audioContext.decodeAudioData(event.target.result, function(buffer) {
+                                const duration = buffer.duration;
+                                const formattedDuration = formatTime(duration)
+                                console.log("The duration of the song is of: " + formattedDuration + " seconds");
+
+                                showSuccessState(formattedDuration, 'custom')
+                            });
+                        };
+
+                        reader.onerror = function (event) {
+                            console.error("An error occurred reading the file: ", event);
+                            showFailState('custom')
+                        };
+
+                        reader.readAsArrayBuffer(file);
+                    } else {
+                        showFailState('custom')
+                    }
+                } else {
+                    console.log('No file selected.')
+                    $("#fileUpload .file-input .label").text("No file selected")
+                }
+            });
+
+            $("#youtubeURL").bind('paste', function (e) {
+                setTimeout(function () {
+                    const url = $('#youtubeURL').val().trim()
+                    if (url.length > 0) {
+                        resetYoutubeFormState();
+                        $("#youtube_spinner").fadeIn();
+
+                        fetchVideoInfo(url)
+                    } else {
+                        console.log('Youtube video link is required !!!')
+                    }
+                }, 500)
+            });
+
+            $('.header-hero-content .btn.main-btn').prop('disabled', true)
+        })
+    </script>
 </body>
 </html>

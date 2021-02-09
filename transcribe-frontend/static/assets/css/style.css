@@ -121,6 +121,10 @@ a, a:hover {
 }
 
 /*===== All Button Style =====*/
+.btn.disabled, .btn:disabled {
+    cursor: not-allowed;
+}
+
 .main-btn {
     display: block;
     font-weight: 500;
@@ -715,7 +719,7 @@ a, a:hover {
         top: -7px;
     }
 
-#youtube .form-group input {
+#youtubeSearch .form-group input {
     min-height: 60px;
     padding: 20px;
     padding-left: 21px;
@@ -723,7 +727,7 @@ a, a:hover {
     border: 2px solid #e1e1e1;
 }
 
-#youtube .form-group input:focus {
+#youtubeSearch .form-group input:focus {
     border-color: #364def;
 }
 
@@ -1895,35 +1899,21 @@ a, a:hover {
     align-items: center;
 }
 
-.spinner-form {
-    width: 58px;
-    position: absolute;
-    top: 232px;
-    right: 47px;
-    display: none;
+#youtubeSearch .spinner-icon-box {
+    right: 50px;
 }
 
-.spinner-form-ok {
-    width: 35px;
-    display: none;
-}
-
-.spinner-form-error {
-    width: 25px;
-    display: none;
-}
-
-.spinner-form-file {
+.spinner-form, .spinner-form-file {
     width: 58px;
     display: none;
 }
 
-.spinner-form-ok-file {
+.spinner-form-ok, .spinner-form-ok-file {
     width: 35px;
     display: none;
 }
 
-.spinner-form-error-file {
+.spinner-form-error, .spinner-form-error-file {
     width: 25px;
     display: none;
 }
