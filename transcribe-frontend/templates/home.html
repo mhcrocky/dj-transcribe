@@ -99,7 +99,8 @@
                                         <form>
                                             <div class="form-group">
                                                 <!-- <input type="url" class="form-control" id="youtubeurl" placeholder="Your YouTube Link" /> -->
-                                                <input type="text" id="youtubeURL" class="form-control input-lg" placeholder="Youtube Link" aria-label="Recipient's username" aria-describedby="buttonSearch" />
+                                                <input type="text" id="youtubeURL" class="form-control input-lg" placeholder="Youtube Link" aria-label="Recipient's username"
+                                                       aria-describedby="buttonSearch" oninput="fetchVideoInfo(this.value)" />
                                             </div>
                                             <div class="spinner-icon-box">
                                                 <img class="spinner-form" id="youtube_spinner" src="{% static 'assets/images/spinner-load.svg'%}" />
@@ -507,9 +508,6 @@
                 setTimeout(function () {
                     const url = $('#youtubeURL').val().trim()
                     if (url.length > 0) {
-                        resetYoutubeFormState();
-                        $("#youtube_spinner").fadeIn();
-
                         fetchVideoInfo(url)
                     } else {
                         console.log('Youtube video link is required !!!')

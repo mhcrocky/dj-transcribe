@@ -3,6 +3,9 @@ const fadeOutDelay = 400
 
 function fetchVideoInfo(url) {
     // let video_link = document.getElementById("inputUrl").value;
+    resetYoutubeFormState();
+    $("#youtube_spinner").fadeIn();
+
     fetch('/ytvideo-info/?' + new URLSearchParams({
         url: url,
     }))
