@@ -4,7 +4,7 @@ const fadeOutDelay = 400
 function fetchVideoInfo(url) {
     // let video_link = document.getElementById("inputUrl").value;
     resetYoutubeFormState();
-    $("#youtube_spinner").fadeIn();
+    checkValidation('youtube')
 
     fetch('/ytvideo-info/?' + new URLSearchParams({
         url: url,
@@ -123,6 +123,17 @@ const formatTime = (sec) => {
     return hours + ':' + minutes + ':' + seconds;
 }
 
+
+const checkValidation = (media_source) => {
+    if (media_source === 'youtube') {
+        $("#youtube_spinner").fadeIn();
+        $("#youtubeSearch .youtube-search .button .caption").text('')
+    } else {
+        $("#fileUpload_spinner").fadeIn();
+        $("#fileUpload .file-input .button .caption").text('')
+    }
+}
+
 const showSuccessState = (duration, media_source='youtube') => {
     if (media_source === 'youtube') {
         $("#youtube_spinner").fadeOut(fadeOutDelay, function () {
@@ -130,7 +141,8 @@ const showSuccessState = (duration, media_source='youtube') => {
             $("#youtube_Submit").addClass("text-left");
             $("#youtube_price").fadeIn();
 
-            $("#youtubeSearch .media-duration").text(duration)
+            // $("#youtubeSearch .media-duration").text(duration)
+            $("#youtubeSearch .button .caption").text(duration)
             $('#youtubeSearch .btn.main-btn').prop('disabled', false)
         });
     } else {
@@ -139,7 +151,8 @@ const showSuccessState = (duration, media_source='youtube') => {
             $("#fileUpload_Submit").addClass("text-left");
             $("#fileUpload_price").fadeIn();
 
-            $("#fileUpload .media-duration").text(duration)
+            // $("#fileUpload .media-duration").text(duration)
+            $("#fileUpload .file-input .button .caption").text(duration)
             $('#fileUpload .btn.main-btn').prop('disabled', false)
         });
     }
@@ -149,13 +162,13 @@ const showFailState = (media_source='youtube') => {
     if (media_source === 'youtube') {
          $("#youtube_spinner").fadeOut(fadeOutDelay, function () {
             $("#youtube_spinner_error").fadeIn();
-            $("#fileUpload .media-duration").text('')
+            // $("#fileUpload .media-duration").text('')
             $('#youtubeSearch .btn.main-btn').prop('disabled', true)
         });
     } else {
         $("#fileUpload_spinner").fadeOut(fadeOutDelay, function () {
             $("#fileUpload_spinner_error").fadeIn();
-            $("#fileUpload .media-duration").text('')
+            // $("#fileUpload .media-duration").text('')
             $('#fileUpload .btn.main-btn').prop('disabled', true)
         });
     }
@@ -167,7 +180,8 @@ const resetFileUploadFormState = () => {
     $("#fileUpload_Submit").removeClass("text-left");
     $("#fileUpload_price").hide();
 
-    $("#fileUpload .media-duration").text('')
+    // $("#fileUpload .media-duration").text('')
+    $("#fileUpload .file-input .button .caption").text('Choose')
 }
 
 const resetYoutubeFormState = () => {
@@ -176,5 +190,6 @@ const resetYoutubeFormState = () => {
     $("#youtube_Submit").removeClass("text-left");
     $("#youtube_price").hide();
 
-    $("#youtubeSearch .media-duration").text('')
+    // $("#youtubeSearch .media-duration").text('')
+    $("#youtubeSearch .youtube-search .button .caption").text('Search')
 }

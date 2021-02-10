@@ -97,17 +97,23 @@
                                 <div class="tab-content">
                                     <div id="youtubeSearch" class="tab-pane active">
                                         <form>
-                                            <div class="form-group">
+                                            <div class="form-group position-relative youtube-search">
                                                 <!-- <input type="url" class="form-control" id="youtubeurl" placeholder="Your YouTube Link" /> -->
                                                 <input type="text" id="youtubeURL" class="form-control input-lg" placeholder="Youtube Link" aria-label="Recipient's username"
-                                                       aria-describedby="buttonSearch" oninput="fetchVideoInfo(this.value)" />
+                                                       aria-describedby="buttonSearch"/>
+                                                <span class="button" onclick="searchYoutubeURL()">
+                                                    <span class="spinner-form-file" id="youtube_spinner"><i class="fa fa-spinner" aria-hidden="true"></i></span>
+                                                    <span class="spinner-form-ok-file" id="youtube_spinner_ok"><i class="fa fa-check" aria-hidden="true"></i></span>
+                                                    <span class="spinner-form-error-file" id="youtube_spinner_error"><i class="fa fa-times" aria-hidden="true"></i></span>
+                                                    <span class="caption">Search</span>
+                                                </span>
                                             </div>
-                                            <div class="spinner-icon-box">
-                                                <img class="spinner-form" id="youtube_spinner" src="{% static 'assets/images/spinner-load.svg'%}" />
-                                                <img class="spinner-form-ok" id="youtube_spinner_ok" src="{% static 'assets/images/check-icon.svg'%}" />
-                                                <img class="spinner-form-error" id="youtube_spinner_error" src="{% static 'assets/images/close-icon.svg'%}" />
-                                                <span class="media-duration px-2"></span>
-                                            </div>
+{#                                            <div class="spinner-icon-box">#}
+{#                                                <img class="spinner-form" id="youtube_spinner" src="{% static 'assets/images/spinner-load.svg'%}" />#}
+{#                                                <img class="spinner-form-ok" id="youtube_spinner_ok" src="{% static 'assets/images/check-icon.svg'%}" />#}
+{#                                                <img class="spinner-form-error" id="youtube_spinner_error" src="{% static 'assets/images/close-icon.svg'%}" />#}
+{#                                                <span class="media-duration px-2"></span>#}
+{#                                            </div>#}
                                             <!-- <button class="main-btn wow fadeInUp btn-block" type="button" id="youtube_Submit">
                                                 <span class="youtube-price-lable" id="youtube_price">2.99$</span>
                                                 Transcribe Now
@@ -131,16 +137,21 @@
                                     <div id="fileUpload" class="tab-pane fade">
                                         <form>
                                             <div class="file-input">
-                                                <input type="file" id="fileURL" />
-                                                <span class="button">Choose</span>
                                                 <span class="label" data-js-label>No file selected</span>
+                                                <input type="file" id="fileURL" />
+                                                <span class="button">
+                                                    <span class="spinner-form-file" id="fileUpload_spinner"><i class="fa fa-spinner" aria-hidden="true"></i></span>
+                                                    <span class="spinner-form-ok-file" id="fileUpload_spinner_ok"><i class="fa fa-check" aria-hidden="true"></i></span>
+                                                    <span class="spinner-form-error-file" id="fileUpload_spinner_error"><i class="fa fa-times" aria-hidden="true"></i></span>
+                                                    <span class="caption">Choose</span>
+                                                </span>
                                             </div>
-                                            <div class="spinner-icon-box">
-                                                <img class="spinner-form-file" id="fileUpload_spinner" src="{% static 'assets/images/spinner-load.svg'%}" />
-                                                <img class="spinner-form-ok-file" id="fileUpload_spinner_ok" src="{% static 'assets/images/check-icon.svg'%}" />
-                                                <img class="spinner-form-error-file" id="fileUpload_spinner_error" src="{% static 'assets/images/close-icon.svg'%}" />
-                                                <span class="media-duration px-2"></span>
-                                            </div>
+{#                                            <div class="spinner-icon-box">#}
+{#                                                <img class="spinner-form-file" id="fileUpload_spinner" src="{% static 'assets/images/spinner-load.svg'%}" />#}
+{#                                                <img class="spinner-form-ok-file" id="fileUpload_spinner_ok" src="{% static 'assets/images/check-icon.svg'%}" />#}
+{#                                                <img class="spinner-form-error-file" id="fileUpload_spinner_error" src="{% static 'assets/images/close-icon.svg'%}" />#}
+{#                                            </div>#}
+
                                             <button class="btn main-btn wow btn-block" type="button" id="fileUpload_Submit">
                                                 <span class="youtube-price-lable" id="fileUpload_price">2.99$</span>
                                                 Transcribe Now
@@ -463,14 +474,29 @@
     <script src="{% static 'main.js' %}"></script>
 
     <script>
+        const searchYoutubeURL = () => {
+            const url = $('#youtubeURL').val()
+            fetchVideoInfo(url)
+        }
+
         $(function () {
+            $('#youtubeURL').keydown(function (e) {
+                resetYoutubeFormState()
+                if (e.keyCode === 13) { // Enter key event
+                    e.preventDefault()
+                    e.stopPropagation()
+                    const url = $('#youtubeURL').val()
+                    fetchVideoInfo(url)
+                }
+            })
+
             $("#fileURL").change(function (e) {
                 resetFileUploadFormState();
 
                 const target = e.currentTarget;
                 let file = target.files[0];
                 if (target.files && file) {
-                    $("#fileUpload_spinner").fadeIn();
+                    checkValidation('custom')
 
                     const fileType = file.type
                     console.log("Type: " + fileType);
