@@ -152,7 +152,7 @@ const showSuccessState = (duration, media_source='youtube', price= '0.99') => {
             $("#youtube_price").fadeIn();
 
             $("#youtubeSearch .button .caption").text(duration)
-            $('#youtubeSearch .btn.main-btn').prop('disabled', false)
+            $('#youtube_Submit').prop('disabled', false)
             $('#youtube_price').text(`${price}$`)
         });
     } else {
@@ -162,7 +162,7 @@ const showSuccessState = (duration, media_source='youtube', price= '0.99') => {
             $("#fileUpload_price").fadeIn();
 
             $("#fileUpload .file-input .button .caption").text(duration)
-            $('#fileUpload .btn.main-btn').prop('disabled', false)
+            $('#fileUpload_Submit').prop('disabled', false)
             $('#fileUpload_price').text(`${price}$`)
         });
     }
@@ -172,12 +172,12 @@ const showFailState = (media_source='youtube') => {
     if (media_source === 'youtube') {
         $("#youtube_spinner").fadeOut(fadeOutDelay, function () {
             $("#youtube_spinner_error").fadeIn();
-            $('#youtubeSearch .btn.main-btn').prop('disabled', true)
+            $('#youtube_Submit').prop('disabled', true)
         });
     } else {
         $("#fileUpload_spinner").fadeOut(fadeOutDelay, function () {
             $("#fileUpload_spinner_error").fadeIn();
-            $('#fileUpload .btn.main-btn').prop('disabled', true)
+            $('#fileUpload_Submit').prop('disabled', true)
         });
     }
 }
@@ -196,4 +196,22 @@ const resetYoutubeFormState = () => {
     $("#youtube_spinner_error").hide();
     $("#youtube_Submit").removeClass("text-left");
     $("#youtube_price").hide();
+}
+
+const resetYoutubeTabContent = () => {
+    resetYoutubeFormState()
+    $('#youtubeURL').val('')
+    $("#youtubeSearch .youtube-search .button .caption").text('Search')
+    $('#videoDetail').addClass("d-none")
+}
+
+const resetFileUploadTabContent = () => {
+    resetFileUploadFormState()
+    $('#fileURL').val('')
+    $("#fileUpload .file-input .label").text("No file selected")
+}
+
+const disableTranscribe = () => {
+    $('#youtube_Submit').prop('disabled', true)
+    $('#fileUpload_Submit').prop('disabled', true)
 }

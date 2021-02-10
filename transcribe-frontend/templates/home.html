@@ -86,10 +86,10 @@
                                 <!-- Nav pills -->
                                 <ul class="nav nav-pills" role="tablist">
                                     <li class="nav-item">
-                                        <a class="nav-link active matchHeight" data-toggle="pill" href="#youtubeSearch">YouTube Link</a>
+                                        <a class="nav-link active matchHeight" data-toggle="tab" href="#youtubeSearch">YouTube Link</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link matchHeight" data-toggle="pill" href="#fileUpload">Audio & Video Upload</a>
+                                        <a class="nav-link matchHeight" data-toggle="tab" href="#fileUpload">Audio & Video Upload</a>
                                     </li>
                                 </ul>
 
@@ -464,6 +464,8 @@
         }
 
         $(function () {
+            disableTranscribe()
+
             $('#youtubeURL').keydown(function (e) {
                 if (e.keyCode === 13) { // Enter key event
                     e.preventDefault()
@@ -507,8 +509,8 @@
                         showFailState('custom')
                     }
                 } else {
-                    console.log('No file selected.')
                     $("#fileUpload .file-input .label").text("No file selected")
+                    $('#fileUpload_Submit').prop('disabled', true)
                 }
             });
 
@@ -523,7 +525,18 @@
                 }, 500)
             });
 
-            $('.header-hero-content .btn.main-btn').prop('disabled', true)
+            $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+                let target = $(e.target).attr("href") // activated tab
+                console.log(target);
+
+                let value = document.getElementById('fileURL').value
+                let files = document.getElementById('fileURL').files
+                console.log('upload file: ', value, ',', files);
+
+                resetYoutubeTabContent()
+                resetFileUploadTabContent()
+                disableTranscribe()
+            })
         })
     </script>
 </body>
