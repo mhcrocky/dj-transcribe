@@ -1,65 +1,71 @@
-import datetime
-import time
-import random
-import string
-from reportlab.lib.pagesizes import letter
-from reportlab.pdfgen import canvas
-from reportlab.platypus import Paragraph
+#!/usr/bin/env python3
+
+import sys
+import codecs
+import yaml
+import locale
+import argparse
+
+from pybars import Compiler
+from weasyprint import HTML
+
+parser = argparse.ArgumentParser(description='Convert HTML template to pdf with data from yaml')
+parser.add_argument('--template', help='The name of the template to use (e.g. invoice)', default="invoice")
+parser.add_argument('--yaml_file', help='The yaml file to use for data', default="documents/invoice/data.yml", type=str)
+parser.add_argument('--output_pdf', help='The output pdf file', default="invoice.pdf", type=str)
+parser.add_argument('--locale', help='The locale to use', default="de_DE.UTF-8")
+
+args = parser.parse_args()
+locale.setlocale(locale.LC_ALL, args.locale)
+
+document_url = 'documents/'+args.template
+base_url = document_url+'/template'
+index_html = base_url+'/index.html'
+
+with open(args.yaml_file) as file:
+    document_data = yaml.load(file, Loader=yaml.FullLoader)
+
+print(document_data)
 
 
-def cratepdf(companynamepdf, companyaddresspdf, amountpdf, staxpdf, emailpdf, timestamppdf, canvas2, datepdf, finalstaxpdf, productpdf):
+pos_number = 1
+document_data['totals'] = {
+    'netto' : 0,
+    'brutto': 0,
+    'tax': 0        
+}
+for pos in document_data['positions']:
+    if not 'tax_rate' in pos:
+        pos['tax_rate'] = document_data['tax_rate']
 
-    invoice_id = 1337
+    pos['pos_number'] = pos_number
+    pos['total_netto_price'] = pos['netto_price'] * pos['amount']
+    pos['total_tax'] = pos['total_netto_price'] * (pos['tax_rate'] / float(100))
+    pos['total_brutto_price'] = pos['total_netto_price'] + pos['total_tax']
 
-    canvas = canvas2.Canvas(f"/Users/philippbraun/Desktop/transcribe/transcribe-invoice/{invoice_id}.pdf", pagesize=letter)
+    document_data['totals']['netto'] += pos['total_netto_price']
+    document_data['totals']['brutto'] += pos['total_brutto_price']
+    document_data['totals']['tax'] += pos['total_tax']
 
-    canvas.setLineWidth(.3)
-    canvas.setFont('Helvetica', 12)
+    pos['amount'] = locale.format("%.2f", pos['amount'])
+    pos['tax_rate'] = locale.format("%.2f", pos['tax_rate'])
+    pos['netto_price'] = locale.format("%.2f", pos['netto_price'])
+    pos['total_netto_price'] = locale.format("%.2f", pos['total_netto_price'])
+    pos['text'] = pos['text'].replace('\n', '<br>')
 
-    canvas.line(50, 747, 580, 747) #FROM TOP 1ST LINE
-    canvas.drawString(280, 750, "INVOICE")
-    canvas.drawString(60, 720, companynamepdf)
-    canvas.drawString(60, 690, emailpdf)
-    canvas.drawString(60, 660, companyaddresspdf)
+    pos_number += 1
 
-    canvas.drawString(450, 720, str(datepdf))
-    canvas.line(450, 710, 560, 710)
-    canvas.line(50, 640, 580, 640)#FROM TOP 2ST LINE
-    canvas.line(50, 748, 50, 50)#LEFT LINE
-    canvas.line(400, 640, 400, 50)# MIDDLE LINE
-    canvas.line(580, 748, 580, 50)# RIGHT LINE
-    canvas.drawString(475, 615, 'TOTAL AMOUNT')
-    canvas.drawString(100, 615, 'PRODUCT')
-    canvas.line(50, 600, 580, 600)#FROM TOP 3rd LINE
-    canvas.drawString(60, 550, productpdf)
-    canvas.drawString(500, 550, amountpdf)
-    TOTAL = int(amountpdf) * ((int(staxpdf)) / 100)
-    canvas.drawString(60, 500, "SERVICE TAX (" +staxpdf+"%)")
-    canvas.drawString(500, 500, str(TOTAL))
-    canvas.line(50, 100, 580, 100)#FROM TOP 4th LINE
-    canvas.drawString(60, 80, " TOTAL AMOUNT")
-    canvas.drawString(500, 80, str(finalstaxpdf))
-    canvas.line(50, 50, 580, 50)#FROM TOP LAST LINE
+document_data['totals']['netto'] = locale.format("%.2f", document_data['totals']['netto'])
+document_data['totals']['brutto'] = locale.format("%.2f", document_data['totals']['brutto'])
+document_data['totals']['tax'] = locale.format("%.2f", document_data['totals']['tax'])
 
+with codecs.open(index_html, encoding="utf-8") as index_file:
+    html_text = index_file.read()
+    
+    compiler = Compiler()
+    template = compiler.compile(html_text)
 
-    canvas.setFont('Helvetica', 7)
-    canvas.drawString(80, 200, "Es wird gemäß §19 Abs. 1 Umsatzsteuergesetz keine Umsatzsteuer erhoben.")
-    canvas.drawString(80, 190, "Die aufgeführten Dienstleistungen haben Sie gemäß unserer AGB erhalten.")
-    canvas.drawString(80, 180, "Wenn nicht anders angegeben entspricht das Leistungsdatum dem Rechnungsdatum.")
+    html_text = template(document_data)
 
-
-    canvas.save()
-
-if __name__ == "__main__":
-    companyname = "transcribe.lol"
-    companyaddress = "COMPANY ADDRESS"
-    amount = "10000"
-    stax = "18"
-    email = "hi@transcribe.lol"
-    product = "Office Table"
-
-
-    timestamp = datetime.datetime.now().strftime("%A, %d. %B %Y %I:%M%p")
-    date = time.strftime("%d/%m/%Y")
-    finalstax = int(amount) + (int(amount) * ((int(stax))/100))
-    cratepdf(companyname, companyaddress, amount, stax, email, timestamp, canvas, date, finalstax, product)
+    weasytemplate = HTML(string=html_text, base_url=base_url)
+    weasytemplate.write_pdf(args.output_pdf)

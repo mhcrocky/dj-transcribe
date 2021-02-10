@@ -1,0 +1,115 @@
+@import url('https://fonts.googleapis.com/css?family=Work+Sans:100,200,300,regular,500,600,700,800,900,100italic,200italic,300italic,italic,500italic,600italic,700italic,800italic,900italic%7CArchitects+Daughter:regular');
+@import url('https://fonts.googleapis.com/css?family=Poppins:400,700|Lato:300,400,700&display=swap');
+
+body {
+    font-family: 'Lato', sans-serif;
+    font-weight: normal;
+    font-style: normal;
+    color: #000000;
+    overflow-x: hidden;
+}
+
+@page {
+    margin: 5cm 2cm 5cm 2cm;
+
+    @top-left {
+        content: "transcribe.lol";
+        color: #364def;
+        font-size: 20pt;
+        font-weight: bold;
+    }
+
+    /* @bottom-left {
+        white-space: pre;
+        text-align: left;
+        font-size: 8pt;
+        content: "Philipp Braun" "\a"
+                 "Bärenstraße 19" "\a"
+                 "52064 Aachen" "\a"
+                 "\a" "\a"
+    }
+
+    @bottom-center {
+        white-space: pre;
+        text-align: left;
+        font-size: 8pt;
+        content: "Geschäftsführung" "\a"
+                 "Marc Bartrina, Daniel Huhn" "\a"
+                 "Amtsgericht Düsseldorf HRB 76874" "\a"
+                 "\a\a"
+                 "Seite " counter(page)
+                 " von " counter(pages)
+    }
+
+    @bottom-right {
+        white-space: pre;
+        text-align: left;
+        font-size: 8pt;
+        content: "IBAN:DE89430510400000302794" "\a"
+                 "BIC: WELADED1HTG" "\a"
+                 "Bank: Sparkasse Hattingen" "\a"
+                 "\a" "\a" "\a"
+                 
+    } */
+}
+
+html {
+    font-size: 10pt;
+    font-family: "Arial";
+}
+
+.section {
+    margin-top: 1cm;
+}
+    .section p {
+        line-height: 0.7cm;
+    }
+
+/**
+ * Address table
+ */
+ .adressTable tr:nth-child(1) td {
+     border-bottom: 1px solid black;
+ }
+
+ .small {
+     font-size: 8pt;
+ }
+
+/**
+ * Info table
+ */
+.infoTable {
+    margin-top: 3cm;
+    width: 100%;
+}
+
+/**
+ * Invoice table
+ */
+.invoiceTable {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.invoiceTable td {
+    border: 1px solid black;
+    padding: 5px;
+}
+
+.invoiceTable thead {
+    background: lightgray;
+}
+
+.invoiceTable .padrow {
+    height: 10px;
+}
+
+.invoiceTable .tfoot td {
+    border: none;
+    padding: 2px;
+}
+
+.nowrap {
+    white-space: nowrap;
+}

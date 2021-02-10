@@ -1,0 +1,75 @@
+<html>
+    <head>
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <div>
+            <table class="adressTable">
+                <tr>
+                    <td class="small">Philipp Braun, Bärenstraße 19, 52064 Aachen</td>
+                </tr>
+                <tr><td>{{to.name}}</td></tr>
+                <tr><td>{{to.street}}</td></tr>
+                <tr><td>{{to.postcode}} {{to.city}}</td></tr>
+            </table>
+        </div>
+
+        <div class="section">
+            <table class="infoTable">
+                <tr>
+                    <td><b>Rechnung {{invoice.number}}</b></td>
+                    <td>Kundennummer: {{to.customer_number}}</td>
+                </tr>
+                <tr>
+                    <td class="small">Das Rechnungsdatum entspricht dem Leistungsdatum.</td>
+                    <td>Rechnungsdatum: {{invoice.date}}</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="section">
+            <table class="invoiceTable">
+                <thead>
+                    <tr>
+                        <td>Pos</td>
+                        <td>Beschreibung</td>
+                        <td>Einzelpreis</td>
+                        <td>Stunden</td>
+                        <td>Gesamtpreis</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#positions}}
+                    <tr>
+                        <td>{{pos_number}}</td>
+                        <td>{{{text}}}</td>
+                        <td class="nowrap">{{netto_price}} {{@root.currency}}</td>
+                        <td>{{amount}}</td>
+                        <td class="nowrap">{{total_netto_price}} {{@root.currency}}</td>
+                    </tr>
+                    {{/positions}}
+                    <tr class="tfoot">
+                        <td class="padrow"></td>
+                    </tr>
+                    <tr class="tfoot">
+                        <td class="noborder"></td>
+                        <td class="noborder"></td>
+                        <td colspan="2"> Rechnungsbetrag</td>                    
+                        <td class="nowrap" colspan="2">{{totals.brutto}} {{@root.currency}}</td>                    
+                    </tr>                                
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="section">
+            <p>Vielen Dank für Ihren Auftrag.</p>
+            <p>
+                Es wird gemäß §19 Abs. 1 Umsatzsteuergesetz keine Umsatzsteuer erhoben. Die aufgeführten Dienstleistungen haben Sie gemäß unserer AGB erhalten.
+            </p>
+            <p>
+                Steuernummer 1234/5678
+            </p>
+        </div>
+
+    </body>
+</html>

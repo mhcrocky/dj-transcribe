@@ -14,5 +14,6 @@ RUN apt-get -y update \
 
 COPY ./transcribe-frontend/requirements.txt ./
 RUN pip install --no-cache-dir -r ./requirements.txt
+RUN apt-get install -y locales locales-all
 
 CMD ["/bin/bash"]

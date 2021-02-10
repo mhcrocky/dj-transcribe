@@ -1,0 +1,19 @@
+to:
+    name: Musterkunde
+    street: An der Ecke 1
+    postcode: 12345
+    city: Berlin
+    customer_number: 10004
+
+currency: USD
+tax_rate: 0
+invoice:
+    number: 1337
+    date: 15.01.2021
+
+positions:
+    - netto_price: 0.99 
+      amount: 1.47
+      text: |
+        Speech Transcription
+        <small>https://youtube.com/234fasd</small>
