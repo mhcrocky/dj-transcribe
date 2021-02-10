@@ -766,7 +766,7 @@ a, a:hover {
     font-weight: bold;
     float: right;
     color: #fff;
-    position: relative;
+    position: absolute;
     top: -2px;
     right: -2px;
     min-width: 128px;
