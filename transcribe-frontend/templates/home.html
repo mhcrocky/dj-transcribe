@@ -100,7 +100,7 @@
                                             <div class="form-group position-relative youtube-search">
                                                 <!-- <input type="url" class="form-control" id="youtubeurl" placeholder="Your YouTube Link" /> -->
                                                 <input type="text" id="youtubeURL" class="form-control input-lg" placeholder="Youtube Link" aria-label="Recipient's username"
-                                                       aria-describedby="buttonSearch"/>
+                                                       aria-describedby="buttonSearch" oninput="fetchVideoInfo(this.value)"/>
                                                 <span class="button" onclick="searchYoutubeURL()">
                                                     <span class="spinner-form-file" id="youtube_spinner"><i class="fa fa-spinner" aria-hidden="true"></i></span>
                                                     <span class="spinner-form-ok-file" id="youtube_spinner_ok"><i class="fa fa-check" aria-hidden="true"></i></span>
@@ -108,16 +108,6 @@
                                                     <span class="caption">Search</span>
                                                 </span>
                                             </div>
-{#                                            <div class="spinner-icon-box">#}
-{#                                                <img class="spinner-form" id="youtube_spinner" src="{% static 'assets/images/spinner-load.svg'%}" />#}
-{#                                                <img class="spinner-form-ok" id="youtube_spinner_ok" src="{% static 'assets/images/check-icon.svg'%}" />#}
-{#                                                <img class="spinner-form-error" id="youtube_spinner_error" src="{% static 'assets/images/close-icon.svg'%}" />#}
-{#                                                <span class="media-duration px-2"></span>#}
-{#                                            </div>#}
-                                            <!-- <button class="main-btn wow fadeInUp btn-block" type="button" id="youtube_Submit">
-                                                <span class="youtube-price-lable" id="youtube_price">2.99$</span>
-                                                Transcribe Now
-                                            </button> -->
                                             <button class="btn main-btn wow btn-block" type="button" id="youtube_Submit" >
                                                 <span class="youtube-price-lable" id="youtube_price">2.99$</span>
                                                 Transcribe Now
@@ -146,12 +136,6 @@
                                                     <span class="caption">Choose</span>
                                                 </span>
                                             </div>
-{#                                            <div class="spinner-icon-box">#}
-{#                                                <img class="spinner-form-file" id="fileUpload_spinner" src="{% static 'assets/images/spinner-load.svg'%}" />#}
-{#                                                <img class="spinner-form-ok-file" id="fileUpload_spinner_ok" src="{% static 'assets/images/check-icon.svg'%}" />#}
-{#                                                <img class="spinner-form-error-file" id="fileUpload_spinner_error" src="{% static 'assets/images/close-icon.svg'%}" />#}
-{#                                            </div>#}
-
                                             <button class="btn main-btn wow btn-block" type="button" id="fileUpload_Submit">
                                                 <span class="youtube-price-lable" id="fileUpload_price">2.99$</span>
                                                 Transcribe Now
@@ -481,12 +465,9 @@
 
         $(function () {
             $('#youtubeURL').keydown(function (e) {
-                resetYoutubeFormState()
                 if (e.keyCode === 13) { // Enter key event
                     e.preventDefault()
                     e.stopPropagation()
-                    const url = $('#youtubeURL').val()
-                    fetchVideoInfo(url)
                 }
             })
 
@@ -499,7 +480,6 @@
                     checkValidation('custom')
 
                     const fileType = file.type
-                    console.log("Type: " + fileType);
                     const isAudio = checkIsAudio(fileType)
                     const isVideo = checkIsVideo(fileType)
                     if (isAudio || isVideo) {
@@ -509,9 +489,11 @@
                             audioContext.decodeAudioData(event.target.result, function(buffer) {
                                 const duration = buffer.duration;
                                 const formattedDuration = formatTime(duration)
-                                console.log("The duration of the song is of: " + formattedDuration + " seconds");
 
-                                showSuccessState(formattedDuration, 'custom')
+                                const durationInMin = duration/60
+                                const price = durationInMin > 50 ? durationInMin/100 : 50/100;
+
+                                showSuccessState(formattedDuration, 'custom', price)
                             });
                         };
 

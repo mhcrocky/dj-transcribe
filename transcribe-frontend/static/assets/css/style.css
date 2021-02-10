@@ -1898,19 +1898,6 @@ a, a:hover {
     background: #fff;
 }
 
-.spinner-icon-box {
-    position: absolute;
-    top: 232px;
-    right: 140px;
-    height: 56px;
-    display: flex;
-    align-items: center;
-}
-
-#youtubeSearch .spinner-icon-box {
-    right: 50px;
-}
-
 .spinner-form, .spinner-form-file,
 .spinner-form-ok, .spinner-form-ok-file,
 .spinner-form-error, .spinner-form-error-file {

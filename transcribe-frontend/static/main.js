@@ -2,8 +2,13 @@ console.log("Sanity check!");
 const fadeOutDelay = 400
 
 function fetchVideoInfo(url) {
-    // let video_link = document.getElementById("inputUrl").value;
     resetYoutubeFormState();
+
+    if (url.trim() === '') {
+        $("#youtubeSearch .youtube-search .button .caption").text('Search')
+        return
+    }
+
     checkValidation('youtube')
 
     fetch('/ytvideo-info/?' + new URLSearchParams({
@@ -32,7 +37,7 @@ function fetchVideoInfo(url) {
             $('#videoDetail').removeClass("d-none")
 
             const duration = formatTime(data.length)
-            showSuccessState(duration, 'youtube')
+            showSuccessState(duration,'youtube', price)
         }
     })
 }
@@ -127,6 +132,8 @@ const formatTime = (sec) => {
 
 const checkValidation = (media_source) => {
     if (media_source === 'youtube') {
+
+
         $("#youtube_spinner").fadeIn();
         $("#youtubeSearch .youtube-search .button .caption").text('')
     } else {
@@ -135,16 +142,18 @@ const checkValidation = (media_source) => {
     }
 }
 
-const showSuccessState = (duration, media_source='youtube') => {
+const showSuccessState = (duration, media_source='youtube', price= '0.99') => {
     if (media_source === 'youtube') {
         $("#youtube_spinner").fadeOut(fadeOutDelay, function () {
+            resetYoutubeFormState()
+
             $("#youtube_spinner_ok").fadeIn();
             $("#youtube_Submit").addClass("text-left");
             $("#youtube_price").fadeIn();
 
-            // $("#youtubeSearch .media-duration").text(duration)
             $("#youtubeSearch .button .caption").text(duration)
             $('#youtubeSearch .btn.main-btn').prop('disabled', false)
+            $('#youtube_price').text(`${price}$`)
         });
     } else {
         $("#fileUpload_spinner").fadeOut(fadeOutDelay, function () {
@@ -152,24 +161,22 @@ const showSuccessState = (duration, media_source='youtube') => {
             $("#fileUpload_Submit").addClass("text-left");
             $("#fileUpload_price").fadeIn();
 
-            // $("#fileUpload .media-duration").text(duration)
             $("#fileUpload .file-input .button .caption").text(duration)
             $('#fileUpload .btn.main-btn').prop('disabled', false)
+            $('#fileUpload_price').text(`${price}$`)
         });
     }
 }
 
 const showFailState = (media_source='youtube') => {
     if (media_source === 'youtube') {
-         $("#youtube_spinner").fadeOut(fadeOutDelay, function () {
+        $("#youtube_spinner").fadeOut(fadeOutDelay, function () {
             $("#youtube_spinner_error").fadeIn();
-            // $("#fileUpload .media-duration").text('')
             $('#youtubeSearch .btn.main-btn').prop('disabled', true)
         });
     } else {
         $("#fileUpload_spinner").fadeOut(fadeOutDelay, function () {
             $("#fileUpload_spinner_error").fadeIn();
-            // $("#fileUpload .media-duration").text('')
             $('#fileUpload .btn.main-btn').prop('disabled', true)
         });
     }
@@ -181,7 +188,6 @@ const resetFileUploadFormState = () => {
     $("#fileUpload_Submit").removeClass("text-left");
     $("#fileUpload_price").hide();
 
-    // $("#fileUpload .media-duration").text('')
     $("#fileUpload .file-input .button .caption").text('Choose')
 }
 
@@ -190,7 +196,4 @@ const resetYoutubeFormState = () => {
     $("#youtube_spinner_error").hide();
     $("#youtube_Submit").removeClass("text-left");
     $("#youtube_price").hide();
-
-    // $("#youtubeSearch .media-duration").text('')
-    $("#youtubeSearch .youtube-search .button .caption").text('Search')
 }
