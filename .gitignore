@@ -129,8 +129,7 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-.bash_history
-
+*.bash_history
 *.mp4
 *.DS_Store
 staticfiles/
