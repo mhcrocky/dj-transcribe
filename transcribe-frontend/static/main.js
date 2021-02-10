@@ -104,6 +104,7 @@ const checkIsVideo = (fileType) => {
         case 'video/mp4':
         case 'video/ogg':
         case 'video/webm':
+        case 'video/quicktime': // .mov
             return true;
     }
 
