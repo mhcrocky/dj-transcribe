@@ -13,6 +13,10 @@ contains the template that should be used in the django application
 
 parse assembly-ai json to pdf and other files
 
+/transcribe-invoice
+
+pdf invoice generator that complies with german law
+
 
 Pages
 ============
