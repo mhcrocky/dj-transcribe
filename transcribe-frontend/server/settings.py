@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'djoser',
     'corsheaders',
+    'django_crontab',
     # user apps
     'apps.ytvideos'
 ]
@@ -193,7 +194,6 @@ S3_USE_SIGV4 = True
 
 DATA_UPLOAD_MAX_MEMORY_SIZE = 1000000000 # 1GB file upload limit
 
-
 '''
 <?xml version="1.0" encoding="UTF-8"?>
 <CORSConfiguration xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
@@ -206,3 +206,8 @@ DATA_UPLOAD_MAX_MEMORY_SIZE = 1000000000 # 1GB file upload limit
 </CORSRule>
 </CORSConfiguration>
 '''
+
+# Crontab
+CRONJOBS = [
+    ('0 1 * * *', 'workers.delete_files_job')
+]
