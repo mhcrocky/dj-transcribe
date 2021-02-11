@@ -16,6 +16,7 @@ urlpatterns = [
     path('config/', views.stripe_config),
     path('ytvideo-info/', views.retrieve_ytvideo_info),
     path('create-checkout-session/', views.create_checkout_session),
+    path('create-checkout-mp3-session/', views.create_checkout_mp3_session),
     path('webhook/', views.stripe_webhook),
     re_path(r'^(?:.*)/?$', views.HomePageView.as_view()),
 ]

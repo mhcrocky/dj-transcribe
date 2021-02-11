@@ -8,6 +8,7 @@ import json
 from django.core.mail import send_mail
 from rest_framework import viewsets 
 from pytube import YouTube
+import boto3
 
 from apps.ytvideos.models import Ytvideo 
 from apps.ytvideos.serializers import YtvideoSerializer
@@ -99,37 +100,69 @@ def stripe_config(request):
 @csrf_exempt
 def create_checkout_session(request):
     if request.method == 'POST':
-        success_url = request.build_absolute_uri('/success/')
-        cancel_url = request.build_absolute_uri('/cancelled/')
-        stripe.api_key = settings.STRIPE_SECRET_KEY
         post_data = json.loads(request.body.decode("utf-8"))
         print("Request payload: ", post_data)
         video_length = post_data.get('length', 0)
         video_link = post_data.get('url', 'www.youtube.com')
         video_title = post_data.get('title', 'Youtube Video')
         price = int(video_length/60) if (int(video_length/60) > 50) else 50
-        try:
-            checkout_session = stripe.checkout.Session.create(
-                # client_reference_id=request.user.id if request.user.is_authenticated else None,
-                success_url=success_url,
-                cancel_url=cancel_url,
-                payment_method_types=['card'],
-                mode='payment',
-                line_items=[
-                    {
-                        'name': video_title,
-                        'quantity': 1,
-                        'currency': 'usd',
-                        'amount': str(price),
-                        'description': video_title,
-                    }
-                ],
-                payment_intent_data={'metadata': {'video_url': video_link, 'status': 'pending', 'processId': 'processId'}}
-            )
 
-            return JsonResponse({'sessionId': checkout_session['id']})
-        except Exception as e:
-            return JsonResponse({'error': str(e)})
+        return stripe_request(request, video_title, video_link, price)
+
+
+@csrf_exempt
+def create_checkout_mp3_session(request):
+    if request.method == 'POST':
+        # TODO: check if this is safe against SQL injection attacks
+        saved_file = request.FILES['file']
+        video_title = saved_file.name
+
+        # TODO: get video length
+        video_length = 1000
+
+
+        price = int(video_length/60) if (int(video_length/60) > 50) else 50
+        
+        # Upload to S3 bucket
+        s3 = boto3.resource('s3', aws_access_key_id=settings.AWS_ACCESS_KEY_ID, aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY)
+        bucket = s3.Bucket('bucket-name')
+        # TODO: change key to random string (otherwise probably replaces)
+        bucket.put_object(Key=video_title, Body=saved_file)
+
+        return stripe_request(request, video_title, video_title, price)
+
+
+def stripe_request(request, video_title, video_link, price):
+
+    stripe.api_key = settings.STRIPE_SECRET_KEY
+    success_url = request.build_absolute_uri('/success/')
+    cancel_url = request.build_absolute_uri('/cancelled/')
+
+    try:
+        checkout_session = stripe.checkout.Session.create(
+            # client_reference_id=request.user.id if request.user.is_authenticated else None,
+            success_url=success_url,
+            cancel_url=cancel_url,
+            payment_method_types=['card'],
+            mode='payment',
+            line_items=[
+                {
+                    'name': video_title,
+                    'quantity': 1,
+                    'currency': 'usd',
+                    'amount': str(price),
+                    'description': video_title,
+                }
+            ],
+            payment_intent_data={'metadata': {
+                'filename': video_link, 'status': 'pending', 'processId': 'processId'}}
+        )
+        stripe_config = {'publicKey': settings.STRIPE_PUBLISHABLE_KEY}
+        return JsonResponse({'sessionId': checkout_session['id'], 'publicKey': settings.STRIPE_PUBLISHABLE_KEY})
+        # return stripe.redirectToCheckout({'sessionId': checkout_session['id']})
+
+    except Exception as e:
+        return JsonResponse({'error': str(e)})
 
 
 @csrf_exempt

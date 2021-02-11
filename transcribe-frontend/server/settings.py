@@ -177,3 +177,18 @@ if os.getcwd() == '/app':
         os.path.join(BASE_DIR, 'static'),
     )
     STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+# AWS
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+# STATICFILES_STORAGE = 'storages.backends.s3boto3.S3StaticStorage'
+
+AWS_ACCESS_KEY_ID = 'AKIAJQT2DLGWYNWJCY5Q'
+AWS_SECRET_ACCESS_KEY = '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'
+AWS_STORAGE_BUCKET_NAME = 'transcribe-lol'
+AWS_S3_FILE_OVERWRITE = True
+AWS_DEFAULT_ACL = None
+AWS_PRELOAD_METADATA = True
+AWS_QUERYSTRING_AUTH = True
+S3_USE_SIGV4 = True
+
+DATA_UPLOAD_MAX_MEMORY_SIZE = 1000000000 # 1GB file upload limit

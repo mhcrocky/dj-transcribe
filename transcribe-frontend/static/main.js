@@ -1,5 +1,6 @@
 console.log("Sanity check!");
-const fadeOutDelay = 400
+const fadeOutDelay = 400;
+let video_length = 0;
 
 function fetchVideoInfo(url) {
     resetYoutubeFormState();
@@ -48,8 +49,9 @@ fetch("/config/")
     .then((data) => {
         // Initialize Stripe.js
         const stripe = Stripe(data.publicKey);
-        // Event handler
-        document.querySelector("#buttonSearch").addEventListener("click", (event) => {
+
+        // YouTube event handler
+        document.querySelector("#youtube_Submit").addEventListener("click", (event) => {
             event.preventDefault();
             let videoinfo = JSON.parse(localStorage.getItem("videoinfo"));
             // Get Checkout Session ID
@@ -75,8 +77,32 @@ fetch("/config/")
                 .then((res) => {
                     console.log(res);
                 });
-
         });
+
+        // File upload event handler
+        document.querySelector("#fileUpload_Submit").addEventListener("click", (event) => {
+            event.preventDefault();
+
+            let filename = document.getElementById("fileURL").value;            
+            let file = document.getElementById("fileURL").files[0];
+            let formData = new FormData();
+            formData.append('file', file);
+
+            // console.log("starting file upload");
+            // console.log(formData);
+
+            fetch('/create-checkout-mp3-session/', {
+                method: 'POST',
+                body: formData
+            })
+            .then(function(res){ return res.json(); })
+            .then(data=> {
+                sessionId = data.sessionId
+                const stripe = Stripe(data.publicKey);
+                return stripe.redirectToCheckout({sessionId: data.sessionId})
+            });
+        });
+
     });
 
 // convert duration seconds to hh:mm format
@@ -125,6 +151,9 @@ const formatTime = (sec) => {
     if (hours   < 10) {hours   = "0" + hours;}
     if (minutes < 10) {minutes = "0" + minutes;}
     if (seconds < 10) {seconds = "0" + seconds;}
+
+    // TODO: cleanup quick fix
+    video_length = (hours * 60) + minutes;
 
     return hours + ':' + minutes + ':' + seconds;
 }
