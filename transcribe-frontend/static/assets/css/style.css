@@ -177,6 +177,9 @@ a, a:hover {
     .section-title .title {
         font-size: 20px;
     }
+    .section-title {
+        padding: 20px;
+    }
 }
 
 @media only screen and (min-width: 576px) and (max-width: 767px) {
@@ -1687,6 +1690,7 @@ a, a:hover {
     .info-bullet {
         padding: 40px;
         padding-top: 20px;
+        padding-bottom: 0px;
     }
 }
 
