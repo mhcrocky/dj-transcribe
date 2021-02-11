@@ -42,6 +42,9 @@ finally run this command to add all defined jobs from CRONJOBS to crontab (of th
 ```
 python manage.py crontab add
 ```
+if deployed to Heroku, open the heroku console and type :.
+
+![heroku](https://user-images.githubusercontent.com/38445298/107681365-df2b8e80-6c96-11eb-8451-1e1d3b6141e3.png)
 
 show current active jobs of this project:.
 ```
