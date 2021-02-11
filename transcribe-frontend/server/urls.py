@@ -16,12 +16,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
-from apps.ytvideos.urls import ytvideos_urlpatterns
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('apps.ytvideos.urls')),
 ]
 
-urlpatterns += ytvideos_urlpatterns    # ytvideos URLs
 urlpatterns += staticfiles_urlpatterns()

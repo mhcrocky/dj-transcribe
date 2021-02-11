@@ -10,21 +10,6 @@ from rest_framework import viewsets
 from pytube import YouTube
 import boto3
 
-from apps.ytvideos.models import Ytvideo 
-from apps.ytvideos.serializers import YtvideoSerializer
-
-
-class YtvideoViewSet(viewsets.ModelViewSet):
-
-    serializer_class = YtvideoSerializer
-    queryset = Ytvideo.objects.all()
-
-    def perform_create(self, serializer):
-        serializer.save()
-
-    def get_queryset(self):
-        return self.queryset.filter()
-
 
 class HomePageView(TemplateView):
     template_name = 'home.html'
