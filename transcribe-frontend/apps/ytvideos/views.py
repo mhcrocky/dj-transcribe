@@ -120,7 +120,6 @@ def create_checkout_mp3_session(request):
         # TODO: get video length
         video_length = 1000
 
-
         price = int(video_length/60) if (int(video_length/60) > 50) else 50
         
         # Upload to S3 bucket

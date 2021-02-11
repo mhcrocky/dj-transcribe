@@ -182,8 +182,8 @@ if os.getcwd() == '/app':
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 # STATICFILES_STORAGE = 'storages.backends.s3boto3.S3StaticStorage'
 
-AWS_ACCESS_KEY_ID = 'AKIAJQT2DLGWYNWJCY5Q'
-AWS_SECRET_ACCESS_KEY = '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'
+AWS_ACCESS_KEY_ID = 'AKIAJIQ2FSRAEQVOGFCA'
+AWS_SECRET_ACCESS_KEY = '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'
 AWS_STORAGE_BUCKET_NAME = 'transcribe-lol'
 AWS_S3_FILE_OVERWRITE = True
 AWS_DEFAULT_ACL = None
@@ -192,3 +192,17 @@ AWS_QUERYSTRING_AUTH = True
 S3_USE_SIGV4 = True
 
 DATA_UPLOAD_MAX_MEMORY_SIZE = 1000000000 # 1GB file upload limit
+
+
+'''
+<?xml version="1.0" encoding="UTF-8"?>
+<CORSConfiguration xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
+<CORSRule>
+    <AllowedOrigin>*</AllowedOrigin>
+    <AllowedMethod>GET</AllowedMethod>
+    <AllowedMethod>POST</AllowedMethod>
+    <AllowedMethod>PUT</AllowedMethod>
+    <AllowedHeader>*</AllowedHeader>
+</CORSRule>
+</CORSConfiguration>
+'''
