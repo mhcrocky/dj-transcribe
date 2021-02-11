@@ -16,9 +16,11 @@ def delete_files_job():
 
             td_days = int((round(td.total_seconds() / 60))/60/24)
 
+            # deletefile
             if (td_days > 7):
                 filename = line_item['filename']
-                # deletefile
-                # we should mention the path also in a constant
-                os.remove(filename)
+                # delete the file from S3 bucket
+                s3 = boto3.resource('s3', aws_access_key_id=settings.AWS_ACCESS_KEY_ID, aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY)
+                bucket = s3.Bucket(settings.AWS_STORAGE_BUCKET_NAME)
+                bucket.delete_object(Bucket=s3, Key=filename)
                 print('delete file')
