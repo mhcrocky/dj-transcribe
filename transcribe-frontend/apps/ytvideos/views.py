@@ -109,7 +109,7 @@ def create_checkout_mp3_session(request):
         
         # Upload to S3 bucket
         s3 = boto3.resource('s3', aws_access_key_id=settings.AWS_ACCESS_KEY_ID, aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY)
-        bucket = s3.Bucket('bucket-name')
+        bucket = s3.Bucket(settings.AWS_STORAGE_BUCKET_NAME)
         # TODO: change key to random string (otherwise probably replaces)
         bucket.put_object(Key=video_title, Body=saved_file)
 

@@ -30,3 +30,43 @@ git push heroku master
 Now the app is deployed to heroku.
 
 For more information, visit [Deploying with Git](https://devcenter.heroku.com/articles/git) and [Working with Django](https://devcenter.heroku.com/categories/working-with-django).
+
+
+## S3 Bucket
+
+* Create S3 bucket with public permissions
+* Create IAM user (programmatic user)
+* Create a custom IAM policy
+
+```
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "VisualEditor0",
+            "Effect": "Allow",
+            "Action": [
+                "s3:PutObject",
+                "s3:PutObjectAcl",
+                "s3:GetObjectAcl",
+                "s3:GetObject",
+                "s3:ListBucket",
+                "s3:DeleteObject",
+                "s3:PutObjectAcl"
+            ],
+            "Resource": [
+                "arn:aws:s3:::transcribe-now/*",
+                "arn:aws:s3:::transcribe-now"
+            ]
+        }
+    ]
+}
+```
+
+* Test config (eu-west-3, json)
+
+```
+aws config
+aws s3 ls s3://transcribe-now
+aws s3 cp data.pdf s3://transcribe-now
+```
