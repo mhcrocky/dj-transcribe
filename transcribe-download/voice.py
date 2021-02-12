@@ -52,7 +52,7 @@ def transcribe(key, audio_url)
     }
 
     headers = {
-        "authorization": "cba052e3be71481183e9c2455cc6b7d3",
+        "authorization": key,
         "content-type": "application/json"
     }
 
@@ -63,10 +63,10 @@ def transcribe(key, audio_url)
 def result(key, tag):
     """get results from queue
     """
-    endpoint = f"https://api.assemblyai.com/v2/transcript/{}" # xb78gr3723-9705-4a54-aaf6-1557147d4253
+    endpoint = f"https://api.assemblyai.com/v2/transcript/{tag}" # xb78gr3723-9705-4a54-aaf6-1557147d4253
 
     headers = {
-        "authorization": "cba052e3be71481183e9c2455cc6b7d3",
+        "authorization": key,
     }
 
     response = requests.get(endpoint, headers=headers)
