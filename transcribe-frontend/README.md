@@ -70,3 +70,23 @@ aws config
 aws s3 ls s3://transcribe-now
 aws s3 cp data.pdf s3://transcribe-now
 ```
+
+
+# Crontab
+
+Reoccuring jobs are schedule via the `django-crontab` module (https://pypi.org/project/django-crontab/).
+
+The following commands to move defined `CRONJOBS` in `settings.py` to crontab.
+
+```
+python manage.py crontab add
+python manage.py crontab show
+python manage.py crontab remove
+```
+
+To run the respective commands on heroku.
+
+```
+heroku run python manage.py crontab add
+heroku run bash
+```
