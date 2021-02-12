@@ -24,6 +24,7 @@ function fetchVideoInfo(url) {
             showFailState('youtube')
         } else {
             localStorage.setItem("videoinfo", JSON.stringify(data));
+            
             document.getElementById("videoThumbnail").setAttribute("src", data.thumbnail_url);
             document.getElementById("videoTitle").textContent = data.title;
             document.getElementById("videoDescription").textContent = data.description;
@@ -34,8 +35,8 @@ function fetchVideoInfo(url) {
             const price = parseInt(data.length/60) > 50 ? parseInt(data.length/60)/100 : 50/100;
             document.getElementById("videoPrice").textContent = "Price: " + price + " USD";
 
-            // Show video detail card
-            $('#videoDetail').removeClass("d-none")
+            // // Show video detail card
+            // $('#videoDetail').removeClass("d-none")
 
             const duration = formatTime(data.length)
             showSuccessState(duration,'youtube', price)
