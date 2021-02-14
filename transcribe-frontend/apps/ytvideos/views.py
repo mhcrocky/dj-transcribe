@@ -9,6 +9,9 @@ from django.core.mail import send_mail
 from rest_framework import viewsets 
 from pytube import YouTube
 import boto3
+import mutagen
+import random
+import string
 
 
 class HomePageView(TemplateView):
@@ -98,22 +101,25 @@ def create_checkout_session(request):
 @csrf_exempt
 def create_checkout_mp3_session(request):
     if request.method == 'POST':
-        # TODO: check if this is safe against SQL injection attacks
+        # get file
         saved_file = request.FILES['file']
         video_title = saved_file.name
+        video_appendix = video_title.split(".")[-1]
+        video_name = ''.join(random.choice(string.ascii_uppercase + string.ascii_lowercase + string.digits) for _ in range(16))
+        video_title = video_name + "." + video_appendix
 
-        # TODO: get video length
-        video_length = 1000
-
-        price = int(video_length/60) if (int(video_length/60) > 50) else 50
+        # determine price
+        video_info = mutagen.File(saved_file).info
+        video_price = int(129 * (video_info.length / 60 / 60))
+        if video_price < 129:
+            video_price = 129
         
-        # Upload to S3 bucket
+        # upload to S3 bucket
         s3 = boto3.resource('s3', aws_access_key_id=settings.AWS_ACCESS_KEY_ID, aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY)
         bucket = s3.Bucket(settings.AWS_STORAGE_BUCKET_NAME)
-        # TODO: change key to random string (otherwise probably replaces)
-        bucket.put_object(Key=video_title, Body=saved_file)
+        bucket.put_object(Key=video_title, Body=saved_file.read())
 
-        return stripe_request(request, video_title, video_title, price)
+        return stripe_request(request, video_title, video_title, video_price)
 
 
 def stripe_request(request, video_title, video_link, price):
