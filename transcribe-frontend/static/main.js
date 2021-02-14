@@ -84,9 +84,7 @@ fetch("/config/")
         document.querySelector("#fileUpload_Submit").addEventListener("click", (event) => {
             event.preventDefault();
 
-
             $("#fileSubmit_spinner").fadeIn();
-
 
             let filename = document.getElementById("fileURL").value;            
             let file = document.getElementById("fileURL").files[0];

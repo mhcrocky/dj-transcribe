@@ -2,7 +2,6 @@ import sys
 import time
 import requests
 import json
-
 import pytube
 
 
@@ -11,14 +10,13 @@ def download(link):
     """
     yt = pytube.YouTube(link)
 
-    print('video description: ', yt.description)
-    print('rating', yt.rating)
-    print('length', yt.length)
-    print('views', yt.views)
+    # print('video description: ', yt.description)
+    # print('rating', yt.rating)
+    # print('length', yt.length)
+    # print('views', yt.views)
 
     stream = yt.streams.get_audio_only()
     stream.download(filename="output")
-
 
 
 def read_file(filename, chunk_size=5242880):
@@ -28,54 +26,59 @@ def read_file(filename, chunk_size=5242880):
             if not data:
                 break
             yield data
- 
-# TODO: clean-up to class hierarchy
-def upload(key, file_name):
-    """upload file to assembly-ai servers
-    """
-    headers = {'authorization': key}
-    response = requests.post('https://api.assemblyai.com/v2/upload',
-                            headers=headers,
-                            data=read_file(filename))
-    print(response.json())
-    # https://cdn.assemblyai.com/upload/0e30a085-30eb-4b77-9911-133b538a35e6
 
 
-def transcribe(key, audio_url)
-    """trigger transcription
-    """
-    endpoint = "https://api.assemblyai.com/v2/transcript"
+class AssemblyAi(object):
 
-    json = {
-        "audio_url": audio_url,
-        "speaker_labels": True
-    }
+    def __init__(self, key):
+        self.key = key
 
-    headers = {
-        "authorization": key,
-        "content-type": "application/json"
-    }
+    def upload(self, file_name):
+        """upload file to assembly-ai servers
+        """
+        headers = {'authorization': self.key}
+        response = requests.post('https://api.assemblyai.com/v2/upload',
+                                headers=headers,
+                                data=read_file(file_name))
+        
+        # https://cdn.assemblyai.com/upload/0e30a085-30eb-4b77-9911-133b538a35e6
+        return response.json()["upload_url"]
 
-    response = requests.post(endpoint, json=json, headers=headers)
-    print(response.json())
+    def transcribe(self, audio_url):
+        """trigger transcription
+        """
+        endpoint = "https://api.assemblyai.com/v2/transcript"
+
+        json = {
+            "audio_url": audio_url,
+            "speaker_labels": True
+        }
+
+        headers = {
+            "authorization": self.key,
+            "content-type": "application/json"
+        }
+
+        response = requests.post(endpoint, json=json, headers=headers)
+        return response.json()["id"]
 
 
-def result(key, tag):
-    """get results from queue
-    """
-    endpoint = f"https://api.assemblyai.com/v2/transcript/{tag}" # xb78gr3723-9705-4a54-aaf6-1557147d4253
+    def poll(self, tag):
+        """get results from queue
+        """
+        endpoint = f"https://api.assemblyai.com/v2/transcript/{tag}" # xb78gr3723-9705-4a54-aaf6-1557147d4253
 
-    headers = {
-        "authorization": key,
-    }
+        headers = {
+            "authorization": self.key,
+        }
 
-    response = requests.get(endpoint, headers=headers)
-    response = response.json()
+        response = requests.get(endpoint, headers=headers)
+        response = response.json()
 
-    with open("result.json", "w") as outfile:
-        json.dump(response, outfile)
-    print(response)
+        # with open("result.json", "w") as outfile:
+        #     json.dump(response, outfile)
 
+        return response
 
 
 if __name__ == "__main__":
@@ -84,12 +87,20 @@ if __name__ == "__main__":
     download(link)
 
     # assembly-ai tests
-    key = "cba052e3be71481183e9c2455cc6b7d3"
+    key = "977c87bf52e14cdd911f3bdc2cb1bc84"
+    ai = AssemblyAi(key)
+
+    # upload
     file_name = "output.mp4"
-    upload(key, file_name)
+    audio_url = ai.upload(file_name)
 
-    audio_url = "https://cdn.assemblyai.com/upload/c4fb70f1-4c12-4f35-8a11-01f35d9a11e9"
-    transcribe(key, audio_url)
+    # trigger transcription
+    # audio_url = "https://cdn.assemblyai.com/upload/c4fb70f1-4c12-4f35-8a11-01f35d9a11e9"
+    tag = ai.transcribe(audio_url)
 
-    tag = "b788hwbst-4c1c-4f5a-9e2b-c39072475fca"
-    result(key, tag)
+    # poll transcription results
+    # tag = "b788hwbst-4c1c-4f5a-9e2b-c39072475fca"
+    response = ai.poll(tag)
+
+    print(response)
+    print(response["status"])
