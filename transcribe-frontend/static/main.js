@@ -83,7 +83,7 @@ fetch("/config/")
         // File upload event handler
         document.querySelector("#fileUpload_Submit").addEventListener("click", (event) => {
             event.preventDefault();
-
+            $('.preloader').css('display','block');
             $("#fileSubmit_spinner").fadeIn();
 
             let filename = document.getElementById("fileURL").value;            

@@ -23,3 +23,4 @@ pybars3==0.9.7
 pyyaml==5.4.1
 django-crontab==0.7.1
 mutagen==1.45.1
+boto3==1.17.7
