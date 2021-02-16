@@ -11,7 +11,7 @@ from pytube import YouTube
 import re
 
 
-STRIPE_SECRET_KEY = 'sk_test_51I7A7ACXNKb5cnwi9ddh35YkIJUo4DzPinbimiHhqqNe2ZBvmE3gwJ9YRBwziFaJiQOqX0BwlmFRQzr9kZwyIhQd00vKy8owwf'
+STRIPE_SECRET_KEY = 'sk_test_51ILA0WGzr6eXbH6PrW3FsnAFM55MZ4Eqg6FO464xyQu1WW8nlLpUTunnsdC8fWuNqGIuNkDoo57zyVq1EfXDr0iz00f5eztRR3'
 
 # update PaymentIntent metadata
 # @pi_id: PaymentIntent id

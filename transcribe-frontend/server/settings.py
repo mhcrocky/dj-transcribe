@@ -149,9 +149,16 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Stripe
-STRIPE_PUBLISHABLE_KEY = 'pk_test_51I7A7ACXNKb5cnwif3jpr0b4CMx8QRWphNkm6CqvhA8Wi69hP4rtdkfujHEYbrIY2zS0BTkyOWUeYmHeg2oDxipj00pjty4VAo'
-STRIPE_SECRET_KEY = 'sk_test_51I7A7ACXNKb5cnwi9ddh35YkIJUo4DzPinbimiHhqqNe2ZBvmE3gwJ9YRBwziFaJiQOqX0BwlmFRQzr9kZwyIhQd00vKy8owwf'
-STRIPE_ENDPOINT_SECRET = 'whsec_J9Rq54krTrL9VZIK9eIOs2Hp6yKpV6JG'
+"""
+https://dashboard.stripe.com/dashboard 
+    here you can see the Publishable key and Secret key and have to set these to this setting parameters (STRIPE_PUBLISHABLE_KEY , STRIPE_SECRET_KEY).
+    and have to set sass_utils.py 's STRIPE_SECRET_KEY parameter to Secret key.
+https://dashboard.stripe.com/webhooks
+    here you can create endpoint and can set endpoint secret key.
+"""
+STRIPE_PUBLISHABLE_KEY = 'pk_test_51ILA0WGzr6eXbH6PdKvIakVnyX2CN4alAO9EairKLowBvGQ2Kclq0U7ofxKQwPLMMMGvunlFUyBorwhXCJFn26ZP00szBKjXb4'
+STRIPE_SECRET_KEY = 'sk_test_51ILA0WGzr6eXbH6PrW3FsnAFM55MZ4Eqg6FO464xyQu1WW8nlLpUTunnsdC8fWuNqGIuNkDoo57zyVq1EfXDr0iz00f5eztRR3'
+STRIPE_ENDPOINT_SECRET = 'whsec_uQmF412bhKKkLZx6WxzVAZ2WaCn2Ftbk'
 
 # Email
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
