@@ -160,6 +160,9 @@ STRIPE_PUBLISHABLE_KEY = 'pk_test_51ILA0WGzr6eXbH6PdKvIakVnyX2CN4alAO9EairKLowBv
 STRIPE_SECRET_KEY = 'sk_test_51ILA0WGzr6eXbH6PrW3FsnAFM55MZ4Eqg6FO464xyQu1WW8nlLpUTunnsdC8fWuNqGIuNkDoo57zyVq1EfXDr0iz00f5eztRR3'
 STRIPE_ENDPOINT_SECRET = 'whsec_uQmF412bhKKkLZx6WxzVAZ2WaCn2Ftbk'
 
+#assembly-ai
+ASSEMBLY_AI_KEY = '1fc3ded0edaa4851b288051bff6e56d5'
+ASSEMBLY_AI_ENDPOINT = 'https://api.assemblyai.com/v2/transcript'
 # Email
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS = True

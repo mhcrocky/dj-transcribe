@@ -12,6 +12,27 @@ import boto3
 import mutagen
 import random
 import string
+import requests
+
+def assembly_ai_request(request):
+    json = {
+        "audio_url": "https://s3-us-west-2.amazonaws.com/blog.assemblyai.com/audio/8-7-2018-post/7510.mp3"
+    }
+    headers = {
+        "authorization": settings.ASSEMBLY_AI_KEY,
+        "content-type": "application/json"
+    }
+    response = requests.post( settings.ASSEMBLY_AI_ENDPOINT , json=json, headers=headers)
+    return response.json()
+
+def assembly_ai_get_text(request):
+    endpoint = settings.ASSEMBLY_AI_ENDPOINT + '/' + assem_id
+    headers = {
+        "authorization": settings.ASSEMBLY_AI_KEY,
+    }
+    r = requests.get(endpoint, headers=headers)
+    print(r.json(),'ddd')
+    return r.json()['id']
 
 
 class HomePageView(TemplateView):
@@ -148,6 +169,7 @@ def stripe_request(request, video_title, video_link, price):
                 'filename': video_link, 'status': 'pending', 'processId': 'processId'}}
         )
         stripe_config = {'publicKey': settings.STRIPE_PUBLISHABLE_KEY}
+        print(checkout_session['id'])
         return JsonResponse({'sessionId': checkout_session['id'], 'publicKey': settings.STRIPE_PUBLISHABLE_KEY})
         # return stripe.redirectToCheckout({'sessionId': checkout_session['id']})
 
