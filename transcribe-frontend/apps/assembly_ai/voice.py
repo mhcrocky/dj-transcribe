@@ -31,7 +31,10 @@ def read_file(filename, chunk_size=5242880):
 class AssemblyAi(object):
 
     def __init__(self, key):
-        self.key = '1fc3ded0edaa4851b288051bff6e56d5'
+        if key:
+            self.key = key
+        else:
+            self.key = '1fc3ded0edaa4851b288051bff6e56d5'
 
 
     def upload(self, file_name):
@@ -84,25 +87,24 @@ class AssemblyAi(object):
 
 if __name__ == "__main__":
     # download test
-    # link = "https://www.youtube.com/watch?v=uRYcospQzzw"
-    # download(link)
+    link = "https://www.youtube.com/watch?v=uRYcospQzzw"
+    download(link)
 
     # assembly-ai tests
     key = "1fc3ded0edaa4851b288051bff6e56d5"
     ai = AssemblyAi(key)
 
     # upload
-    # file_name = "output.mp4"
-    # audio_url = ai.upload(file_name)
+    file_name = "output.mp4"
+    audio_url = ai.upload(file_name)
 
     # trigger transcription
-    audio_url = "https://s3-us-west-2.amazonaws.com/blog.assemblyai.com/audio/8-7-2018-post/7510.mp3"
+    # audio_url = "https://cdn.assemblyai.com/upload/c4fb70f1-4c12-4f35-8a11-01f35d9a11e9"
     tag = ai.transcribe(audio_url)
-    # print(tag)
 
     # poll transcription results
     # tag = "b788hwbst-4c1c-4f5a-9e2b-c39072475fca"
-    dd = ai.poll(tag)
+    response = ai.poll(tag)
 
-    print(dd)
-    # print(response["status"])
+    print(response)
+    print(response["status"])
