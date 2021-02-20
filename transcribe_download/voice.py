@@ -31,7 +31,11 @@ def read_file(filename, chunk_size=5242880):
 class AssemblyAi(object):
 
     def __init__(self, key):
-        self.key = key
+        if key:
+            self.key = key
+        else:
+            self.key = '1fc3ded0edaa4851b288051bff6e56d5'
+
 
     def upload(self, file_name):
         """upload file to assembly-ai servers
@@ -87,7 +91,7 @@ if __name__ == "__main__":
     download(link)
 
     # assembly-ai tests
-    key = "977c87bf52e14cdd911f3bdc2cb1bc84"
+    key = "1fc3ded0edaa4851b288051bff6e56d5"
     ai = AssemblyAi(key)
 
     # upload

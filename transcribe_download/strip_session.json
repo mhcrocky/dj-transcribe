@@ -1,0 +1,146 @@
+{
+    "amount": 129,
+    "amount_capturable": 0,
+    "amount_received": 129,
+    "application": null,
+    "application_fee_amount": null,
+    "canceled_at": null,
+    "cancellation_reason": null,
+    "capture_method": "automatic",
+    "charges": {
+        "data": [{
+            "amount": 129,
+            "amount_captured": 129,
+            "amount_refunded": 0,
+            "application": null,
+            "application_fee": null,
+            "application_fee_amount": null,
+            "balance_transaction": "txn_1IN220Gzr6eXbH6PvdvJ7lQD",
+            "billing_details": {
+                "address": {
+                    "city": null,
+                    "country": "RU",
+                    "line1": null,
+                    "line2": null,
+                    "postal_code": null,
+                    "state": null
+                },
+                "email": "rwerwe@fsdf.dsfsd",
+                "name": "24242",
+                "phone": null
+            },
+            "calculated_statement_descriptor": "Stripe",
+            "captured": true,
+            "created": 1613852783,
+            "currency": "usd",
+            "customer": "cus_Iz02twExVQUiuZ",
+            "description": null,
+            "destination": null,
+            "dispute": null,
+            "disputed": false,
+            "failure_code": null,
+            "failure_message": null,
+            "fraud_details": {},
+            "id": "ch_1IN21zGzr6eXbH6PJc4arNoh",
+            "invoice": null,
+            "livemode": false,
+            "metadata": {
+                "filename": "gOTQRiAfwHm4qECd.mp3",
+                "processId": "processId",
+                "status": "pending"
+            },
+            "object": "charge",
+            "on_behalf_of": null,
+            "order": null,
+            "outcome": {
+                "network_status": "approved_by_network",
+                "reason": null,
+                "risk_level": "normal",
+                "risk_score": 11,
+                "seller_message": "Payment complete.",
+                "type": "authorized"
+            },
+            "paid": true,
+            "payment_intent": "pi_1IN1zFGzr6eXbH6Pd8iW4mBr",
+            "payment_method": "pm_1IN21yGzr6eXbH6PGyMN4XFb",
+            "payment_method_details": {
+                "card": {
+                    "brand": "visa",
+                    "checks": {
+                        "address_line1_check": null,
+                        "address_postal_code_check": null,
+                        "cvc_check": "pass"
+                    },
+                    "country": "US",
+                    "exp_month": 2,
+                    "exp_year": 2042,
+                    "fingerprint": "7yyd3tBsCDg415VR",
+                    "funding": "credit",
+                    "installments": null,
+                    "last4": "4242",
+                    "network": "visa",
+                    "three_d_secure": null,
+                    "wallet": null
+                },
+                "type": "card"
+            },
+            "receipt_email": null,
+            "receipt_number": null,
+            "receipt_url": "https://pay.stripe.com/receipts/acct_1ILA0WGzr6eXbH6P/ch_1IN21zGzr6eXbH6PJc4arNoh/rcpt_Iz02KuxoWoRbYPmDuyBKZs31o00xm7n",
+            "refunded": false,
+            "refunds": {},
+            "review": null,
+            "shipping": null,
+            "source": null,
+            "source_transfer": null,
+            "statement_descriptor": null,
+            "statement_descriptor_suffix": null,
+            "status": "succeeded",
+            "transfer_data": null,
+            "transfer_group": null
+        }],
+        "has_more": false,
+        "object": "list",
+        "total_count": 1,
+        "url": "/v1/charges?payment_intent=pi_1IN1zFGzr6eXbH6Pd8iW4mBr"
+    },
+    "client_secret": "pi_1IN1zFGzr6eXbH6Pd8iW4mBr_secret_LP87SIU3kCGzjkRqxJy0UNdYy",
+    "confirmation_method": "automatic",
+    "created": 1613852613,
+    "currency": "usd",
+    "customer": "cus_Iz02twExVQUiuZ",
+    "description": null,
+    "id": "pi_1IN1zFGzr6eXbH6Pd8iW4mBr",
+    "invoice": null,
+    "last_payment_error": null,
+    "livemode": false,
+    "metadata": {
+        "filename": "gOTQRiAfwHm4qECd.mp3",
+        "processId": "processId",
+        "status": "pending"
+    },
+    "next_action": null,
+    "object": "payment_intent",
+    "on_behalf_of": null,
+    "payment_method": "pm_1IN21yGzr6eXbH6PGyMN4XFb",
+    "payment_method_options": {
+        "card": {
+            "installments": null,
+            "network": null,
+            "request_three_d_secure": "automatic"
+        }
+    },
+    "payment_method_types": [
+        "card"
+    ],
+    "receipt_email": null,
+    "review": null,
+    "setup_future_usage": null,
+    "shipping": null,
+    "source": null,
+    "statement_descriptor": null,
+    "statement_descriptor_suffix": null,
+    "status": "succeeded",
+    "transfer_data": null,
+    "transfer_group": null
+}
