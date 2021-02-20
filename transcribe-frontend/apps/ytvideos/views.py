@@ -13,21 +13,29 @@ import mutagen
 import random
 import string
 import requests
-from ..assembly_ai import voice
 
+def assembly_ai_request(request):
+    json = {
+        "audio_url": "https://s3-us-west-2.amazonaws.com/blog.assemblyai.com/audio/8-7-2018-post/7510.mp3"
+    }
+    headers = {
+        "authorization": settings.ASSEMBLY_AI_KEY,
+        "content-type": "application/json"
+    }
+    response = requests.post( settings.ASSEMBLY_AI_ENDPOINT , json=json, headers=headers)
+    return response.json()
 
-# Send email on success payment
-def email(customer_email, customer_name):
-    subject = 'Thank you for using our service.'
-    message = 'Success, you will receive your transcription shortly.'
-    email_from = settings.EMAIL_HOST_USER
-    recipient_list = [customer_email,]
-    send_mail( subject, message, 'andreii@picknmelt.com', recipient_list, fail_silently=False)
-
+def assembly_ai_get_text(request):
+    endpoint = settings.ASSEMBLY_AI_ENDPOINT + '/' + assem_id
+    headers = {
+        "authorization": settings.ASSEMBLY_AI_KEY,
+    }
+    r = requests.get(endpoint, headers=headers)
+    print(r.json(),'ddd')
+    return r.json()['id']
 
 
 class HomePageView(TemplateView):
-    email('pancyboxi@gmail.com','pancy')
     template_name = 'home.html'
 
 
@@ -81,6 +89,15 @@ def retrieve_ytvideo_info(request):
             return response
         
 
+# Send email on success payment
+def email(customer_email, customer_name):
+    subject = 'Thank you for using our service.'
+    message = 'Success, you will receive your transcription shortly.'
+    email_from = settings.EMAIL_HOST_USER
+    recipient_list = [customer_email,]
+    send_mail( subject, message, 'andreii@picknmelt.com', recipient_list, fail_silently=False)
+
+
 # For processing stripe payments
 @csrf_exempt
 def stripe_config(request):
@@ -119,18 +136,14 @@ def create_checkout_mp3_session(request):
             video_price = 129
         
         # upload to S3 bucket
-        # s3 = boto3.resource('s3', aws_access_key_id=settings.AWS_ACCESS_KEY_ID, aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY)
-        # bucket = s3.Bucket(settings.AWS_STORAGE_BUCKET_NAME)
-        # bucket.put_object(Key='uploads/'+video_title, Body=saved_file.read())
-        #TODO : get s3 bucket file name
-        ai = voice.AssemblyAi(settings.ASSEMBLY_AI_KEY)
-        audio_url = "https://cdn.assemblyai.com/upload/c4fb70f1-4c12-4f35-8a11-01f35d9a11e9"
-        tag = ai.transcribe(audio_url)
+        s3 = boto3.resource('s3', aws_access_key_id=settings.AWS_ACCESS_KEY_ID, aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY)
+        bucket = s3.Bucket(settings.AWS_STORAGE_BUCKET_NAME)
+        bucket.put_object(Key='uploads/'+video_title, Body=saved_file.read())
 
-        return stripe_request(request, video_title, tag, video_price)
+        return stripe_request(request, video_title, video_title, video_price)
 
 
-def stripe_request(request, video_title, tag, price):
+def stripe_request(request, video_title, video_link, price):
 
     stripe.api_key = settings.STRIPE_SECRET_KEY
     success_url = request.build_absolute_uri('/success/')
@@ -153,7 +166,7 @@ def stripe_request(request, video_title, tag, price):
                 }
             ],
             payment_intent_data={'metadata': {
-                'filename': video_title, 'status': 'pending','tag':tag}}
+                'filename': video_link, 'status': 'pending', 'processId': 'processId'}}
         )
         stripe_config = {'publicKey': settings.STRIPE_PUBLISHABLE_KEY}
         print(checkout_session['id'])

@@ -12,7 +12,4 @@ TODO
 * create transcription job via assembly-ai (/transcribe-download) and set Stripe invoice status to "polling" (crontab)
 
 3. Milestone (100 USD)
-* poll results from assembly-ai to send email with attachments (/transcribe-parse)
- if transcription is available and set Stripe invoice status to "finished" (crontab)
-
- 
+* poll results from assembly-ai to send email with attachments (/transcribe-parse) if transcription is available and set Stripe invoice status to "finished" (crontab)
