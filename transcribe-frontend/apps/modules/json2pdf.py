@@ -76,7 +76,7 @@ def generatePDF(words, interVal=1, filename="output"):
     with doc:
         with article(id='cover'):
             h1('Transcription')
-            address('https://www.youtube.com/watch?v=uRYcospQzzw')
+            address('')
 
     with doc:
         conthtml = article()
@@ -116,12 +116,12 @@ def generatePDF(words, interVal=1, filename="output"):
 
         # conthtml.add(tblhtml)
 
-    with open('assets/input.html', 'w') as f:
+    with open('static/pdf_template/input.html', 'w') as f:
         f.write(doc.render())
 
-    html = Path('assets/input.html').read_text()
+    html = Path('static/pdf_template/input.html').read_text()
     pdf = makepdf(html)
-    Path('output/' + filename + '.pdf').write_bytes(pdf)
+    Path('static/output/' + filename + '.pdf').write_bytes(pdf)
 
 def generateSrt(words, filename="output"):
     """Generate a Srt file for video file."""

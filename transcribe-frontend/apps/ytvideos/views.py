@@ -5,7 +5,7 @@ from django.http.response import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic.base import TemplateView
 import json
-from django.core.mail import send_mail
+from django.core.mail import send_mail, EmailMessage
 from rest_framework import viewsets 
 from pytube import YouTube
 import boto3
@@ -13,27 +13,9 @@ import mutagen
 import random
 import string
 import requests
-
-def assembly_ai_request(request):
-    json = {
-        "audio_url": "https://s3-us-west-2.amazonaws.com/blog.assemblyai.com/audio/8-7-2018-post/7510.mp3"
-    }
-    headers = {
-        "authorization": settings.ASSEMBLY_AI_KEY,
-        "content-type": "application/json"
-    }
-    response = requests.post( settings.ASSEMBLY_AI_ENDPOINT , json=json, headers=headers)
-    return response.json()
-
-def assembly_ai_get_text(request):
-    endpoint = settings.ASSEMBLY_AI_ENDPOINT + '/' + assem_id
-    headers = {
-        "authorization": settings.ASSEMBLY_AI_KEY,
-    }
-    r = requests.get(endpoint, headers=headers)
-    print(r.json(),'ddd')
-    return r.json()['id']
-
+from ..modules import assembly_ai
+from ..modules import invoice
+from ..modules import json2pdf
 
 class HomePageView(TemplateView):
     template_name = 'home.html'
@@ -93,9 +75,14 @@ def retrieve_ytvideo_info(request):
 def email(customer_email, customer_name):
     subject = 'Thank you for using our service.'
     message = 'Success, you will receive your transcription shortly.'
+    file = open('static/output/output.pdf')
     email_from = settings.EMAIL_HOST_USER
     recipient_list = [customer_email,]
-    send_mail( subject, message, 'andreii@picknmelt.com', recipient_list, fail_silently=False)
+
+    mail = EmailMessage(subject, message, 'dfsdf@dsfds.dfs', recipient_list,fail_silently=False)
+    mail.attach(file.name, file.read(), file.content_type)
+    
+    mail.send()
 
 
 # For processing stripe payments
@@ -140,10 +127,14 @@ def create_checkout_mp3_session(request):
         bucket = s3.Bucket(settings.AWS_STORAGE_BUCKET_NAME)
         bucket.put_object(Key='uploads/'+video_title, Body=saved_file.read())
 
-        return stripe_request(request, video_title, video_title, video_price)
+        ai = assembly_ai.AssemblyAi(settings.ASSEMBLY_AI_KEY)
+        audio_url = "https://s3-us-west-2.amazonaws.com/blog.assemblyai.com/audio/8-7-2018-post/7510.mp3"
+        tag = ai.transcribe(audio_url)
+
+        return stripe_request(request, video_title, tag, video_price)
 
 
-def stripe_request(request, video_title, video_link, price):
+def stripe_request(request, video_title, tag, price):
 
     stripe.api_key = settings.STRIPE_SECRET_KEY
     success_url = request.build_absolute_uri('/success/')
@@ -166,7 +157,7 @@ def stripe_request(request, video_title, video_link, price):
                 }
             ],
             payment_intent_data={'metadata': {
-                'filename': video_link, 'status': 'pending', 'processId': 'processId'}}
+                'filename': video_title, 'status': 'pending', 'tag': tag}}
         )
         stripe_config = {'publicKey': settings.STRIPE_PUBLISHABLE_KEY}
         print(checkout_session['id'])
@@ -209,7 +200,15 @@ def handle_checkout_session(session):
     # client_reference_id = user's id
     customer_email = session['charges']['data'][0]['billing_details']['email']
     customer_name = session['charges']['data'][0]['billing_details']['name']
+    tag = session['metadata']['tag']
     print("session:", customer_email)
+
+    #assembly ai get poll
+    ai = assembly_ai.AssemblyAi(settings.ASSEMBLY_AI_KEY)
+    ai_result = ai.poll(tag)
+    print(ai_result)
+    json2pdf.generatePDF(ai_result['words'])
+
     email(customer_email, customer_name)
     client_reference_id = session.get("client_reference_id")
     payment_intent = session.get("payment_intent")
