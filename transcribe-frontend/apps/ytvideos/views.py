@@ -75,14 +75,14 @@ def retrieve_ytvideo_info(request):
 def email(customer_email, customer_name):
     subject = 'Thank you for using our service.'
     message = 'Success, you will receive your transcription shortly.'
-    file = open('static/output/output.pdf')
     email_from = settings.EMAIL_HOST_USER
     recipient_list = [customer_email,]
 
-    mail = EmailMessage(subject, message, 'dfsdf@dsfds.dfs', recipient_list,fail_silently=False)
-    mail.attach(file.name, file.read(), file.content_type)
-    
-    mail.send()
+    mail = EmailMessage(subject, message, 'andreii@picknmelt.com', recipient_list)
+
+    with open('static/output/output.pdf', 'rb') as attach:
+        mail.attach('trascribe.pdf', attach.read(), 'pdf/pdf')
+        mail.send()
 
 
 # For processing stripe payments
@@ -126,7 +126,9 @@ def create_checkout_mp3_session(request):
         s3 = boto3.resource('s3', aws_access_key_id=settings.AWS_ACCESS_KEY_ID, aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY)
         bucket = s3.Bucket(settings.AWS_STORAGE_BUCKET_NAME)
         bucket.put_object(Key='uploads/'+video_title, Body=saved_file.read())
+        print('uploads/'+video_title)
 
+        # get tag from  assembly ai 
         ai = assembly_ai.AssemblyAi(settings.ASSEMBLY_AI_KEY)
         audio_url = "https://s3-us-west-2.amazonaws.com/blog.assemblyai.com/audio/8-7-2018-post/7510.mp3"
         tag = ai.transcribe(audio_url)
