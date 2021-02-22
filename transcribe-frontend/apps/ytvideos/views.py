@@ -5,7 +5,7 @@ from django.http.response import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic.base import TemplateView
 import json
-from django.core.mail import send_mail, EmailMessage
+from django.core.mail import send_mail
 from rest_framework import viewsets 
 from pytube import YouTube
 import boto3
@@ -13,11 +13,21 @@ import mutagen
 import random
 import string
 import requests
-from ..modules import assembly_ai
-from ..modules import invoice
-from ..modules import json2pdf
+from ..assembly_ai import voice
+
+
+# Send email on success payment
+def email(customer_email, customer_name):
+    subject = 'Thank you for using our service.'
+    message = 'Success, you will receive your transcription shortly.'
+    email_from = settings.EMAIL_HOST_USER
+    recipient_list = [customer_email,]
+    send_mail( subject, message, 'andreii@picknmelt.com', recipient_list, fail_silently=False)
+
+
 
 class HomePageView(TemplateView):
+    email('pancyboxi@gmail.com','pancy')
     template_name = 'home.html'
 
 
@@ -71,20 +81,6 @@ def retrieve_ytvideo_info(request):
             return response
         
 
-# Send email on success payment
-def email(customer_email, customer_name):
-    subject = 'Thank you for using our service.'
-    message = 'Success, you will receive your transcription shortly.'
-    email_from = settings.EMAIL_HOST_USER
-    recipient_list = [customer_email,]
-
-    mail = EmailMessage(subject, message, 'andreii@picknmelt.com', recipient_list)
-
-    with open('static/output/output.pdf', 'rb') as attach:
-        mail.attach('trascribe.pdf', attach.read(), 'pdf/pdf')
-        mail.send()
-
-
 # For processing stripe payments
 @csrf_exempt
 def stripe_config(request):
@@ -123,14 +119,12 @@ def create_checkout_mp3_session(request):
             video_price = 129
         
         # upload to S3 bucket
-        s3 = boto3.resource('s3', aws_access_key_id=settings.AWS_ACCESS_KEY_ID, aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY)
-        bucket = s3.Bucket(settings.AWS_STORAGE_BUCKET_NAME)
-        bucket.put_object(Key='uploads/'+video_title, Body=saved_file.read())
-        print('uploads/'+video_title)
-
-        # get tag from  assembly ai 
-        ai = assembly_ai.AssemblyAi(settings.ASSEMBLY_AI_KEY)
-        audio_url = "https://s3-us-west-2.amazonaws.com/blog.assemblyai.com/audio/8-7-2018-post/7510.mp3"
+        # s3 = boto3.resource('s3', aws_access_key_id=settings.AWS_ACCESS_KEY_ID, aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY)
+        # bucket = s3.Bucket(settings.AWS_STORAGE_BUCKET_NAME)
+        # bucket.put_object(Key='uploads/'+video_title, Body=saved_file.read())
+        #TODO : get s3 bucket file name
+        ai = voice.AssemblyAi(settings.ASSEMBLY_AI_KEY)
+        audio_url = "https://cdn.assemblyai.com/upload/c4fb70f1-4c12-4f35-8a11-01f35d9a11e9"
         tag = ai.transcribe(audio_url)
 
         return stripe_request(request, video_title, tag, video_price)
@@ -159,7 +153,7 @@ def stripe_request(request, video_title, tag, price):
                 }
             ],
             payment_intent_data={'metadata': {
-                'filename': video_title, 'status': 'pending', 'tag': tag}}
+                'filename': video_title, 'status': 'pending','tag':tag}}
         )
         stripe_config = {'publicKey': settings.STRIPE_PUBLISHABLE_KEY}
         print(checkout_session['id'])
@@ -202,15 +196,7 @@ def handle_checkout_session(session):
     # client_reference_id = user's id
     customer_email = session['charges']['data'][0]['billing_details']['email']
     customer_name = session['charges']['data'][0]['billing_details']['name']
-    tag = session['metadata']['tag']
     print("session:", customer_email)
-
-    #assembly ai get poll
-    ai = assembly_ai.AssemblyAi(settings.ASSEMBLY_AI_KEY)
-    ai_result = ai.poll(tag)
-    print(ai_result)
-    json2pdf.generatePDF(ai_result['words'])
-
     email(customer_email, customer_name)
     client_reference_id = session.get("client_reference_id")
     payment_intent = session.get("payment_intent")
