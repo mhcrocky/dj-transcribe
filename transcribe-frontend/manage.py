@@ -3,6 +3,7 @@
 import os
 import sys
 
+from workers import process
 
 def main():
     """Run administrative tasks."""
@@ -19,4 +20,5 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    # main()
+    process.transcription_job()

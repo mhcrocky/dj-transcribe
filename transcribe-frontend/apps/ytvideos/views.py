@@ -13,6 +13,7 @@ import mutagen
 import random
 import string
 
+from modules.download import voice
 
 class HomePageView(TemplateView):
     template_name = 'home.html'
@@ -119,10 +120,13 @@ def create_checkout_mp3_session(request):
         bucket = s3.Bucket(settings.AWS_STORAGE_BUCKET_NAME)
         bucket.put_object(Key='uploads/' + video_title, Body=saved_file.read())
 
-        return stripe_request(request, saved_file.name, video_title, video_price)
+        ai = voice.AssemblyAi(settings.ASSEMBLY_AI_KEY)
+        audio_url = "https://s3-us-west-2.amazonaws.com/blog.assemblyai.com/audio/8-7-2018-post/7510.mp3"
+        tag = ai.transcribe(audio_url)
+        return stripe_request(request, saved_file.name, video_title,tag, video_price)
 
 
-def stripe_request(request, video_title, video_link, price):
+def stripe_request(request, video_title, video_link,tag, price):
 
     stripe.api_key = settings.STRIPE_SECRET_KEY
     success_url = request.build_absolute_uri('/success/')
@@ -145,7 +149,7 @@ def stripe_request(request, video_title, video_link, price):
                 }
             ],
             payment_intent_data={'metadata': {
-                'filename': video_link, 'status': 'pending', 'processId': 'processId'}}
+                'filename': video_link, 'status': 'pending', 'processId': 'processId','tag':tag}}
         )
         stripe_config = {'publicKey': settings.STRIPE_PUBLISHABLE_KEY}
         return JsonResponse({'sessionId': checkout_session['id'], 'publicKey': settings.STRIPE_PUBLISHABLE_KEY})

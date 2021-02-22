@@ -71,18 +71,21 @@ class AssemblyAi(object):
         """get results from queue
         """
         endpoint = f"https://api.assemblyai.com/v2/transcript/{tag}" # xb78gr3723-9705-4a54-aaf6-1557147d4253
-
         headers = {
             "authorization": self.key,
         }
-
         response = requests.get(endpoint, headers=headers)
-        response = response.json()
 
-        # with open("result.json", "w") as outfile:
-        #     json.dump(response, outfile)
+        try:
+            response = response.json()
 
-        return response
+            with open(f"tmp/{tag}.json", "w") as outfile:
+                json.dump(response, outfile)
+
+            return 'okay'
+        except:
+            return 'error'
+            
 
 
 if __name__ == "__main__":
