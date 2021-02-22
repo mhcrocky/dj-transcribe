@@ -117,9 +117,9 @@ def create_checkout_mp3_session(request):
         # upload to S3 bucket
         s3 = boto3.resource('s3', aws_access_key_id=settings.AWS_ACCESS_KEY_ID, aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY)
         bucket = s3.Bucket(settings.AWS_STORAGE_BUCKET_NAME)
-        bucket.put_object(Key=video_title, Body=saved_file.read())
+        bucket.put_object(Key='uploads/' + video_title, Body=saved_file.read())
 
-        return stripe_request(request, video_title, video_title, video_price)
+        return stripe_request(request, saved_file.name, video_title, video_price)
 
 
 def stripe_request(request, video_title, video_link, price):
@@ -141,7 +141,7 @@ def stripe_request(request, video_title, video_link, price):
                     'quantity': 1,
                     'currency': 'usd',
                     'amount': str(price),
-                    'description': video_title,
+                    'description': video_link,
                 }
             ],
             payment_intent_data={'metadata': {
