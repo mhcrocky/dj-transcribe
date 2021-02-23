@@ -38,9 +38,6 @@ def delete_files_job():
 
 def transcription_job():
     ai = voice.AssemblyAi(ASSEMBLY_AI_KEY)
-    audio_url = "https://s3-us-west-2.amazonaws.com/blog.assemblyai.com/audio/8-7-2018-post/7510.mp3"
-    tag = ai.transcribe(audio_url)
-    res = ai.poll('l4getqqv4-4120-457b-9e72-e020f05d2a12')
 
     for checkout in checkout_list:
 

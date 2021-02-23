@@ -219,5 +219,7 @@ DATA_UPLOAD_MAX_MEMORY_SIZE = 1000000000 # 1GB file upload limit
 
 # Crontab
 CRONJOBS = [
-    ('0 1 * * *', 'workers.process.delete_files_job')
+    ('0 1 * * *', 'workers.process.delete_files_job'),
+    ('* * * * *', 'workers.process.transcription_job'),
+    ('* * * * *', 'workers.process.send_result_job'),
 ]

@@ -3,7 +3,12 @@ import time
 import requests
 import json
 import pytube
+import boto3
+from django.conf import settings
 
+AWS_ACCESS_KEY_ID = 'AKIASOJFJ5RPYZJMYOOY'
+AWS_SECRET_ACCESS_KEY = '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'
+AWS_STORAGE_BUCKET_NAME = 'transcribe-now'
 
 def download(link):
     """download youtube video for further processing
@@ -77,13 +82,16 @@ class AssemblyAi(object):
         response = requests.get(endpoint, headers=headers)
 
         try:
-            response = response.json()
+            response = response.text
 
-            with open(f"tmp/{tag}.json", "w") as outfile:
-                json.dump(response, outfile)
-
+            s3 = boto3.resource('s3', aws_access_key_id=AWS_ACCESS_KEY_ID, aws_secret_access_key=AWS_SECRET_ACCESS_KEY)
+            bucket = s3.Bucket(AWS_STORAGE_BUCKET_NAME)
+            bucket.put_object(Key=f'uploads/json/{tag}.json', Body=response)
+            print('okay')
             return 'okay'
+            
         except:
+            print('error')
             return 'error'
             
 
