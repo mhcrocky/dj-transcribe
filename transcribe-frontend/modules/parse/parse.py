@@ -116,12 +116,11 @@ def generatePDF(words, interVal=1, filename="output"):
 
         # conthtml.add(tblhtml)
 
-    with open('assets/input.html', 'w') as f:
+    with open('modules/parse/assets/input.html', 'w') as f:
         f.write(doc.render())
 
-    html = Path('assets/input.html').read_text()
-    pdf = makepdf(html)
-    Path('output/' + filename + '.pdf').write_bytes(pdf)
+    html = Path('modules/parse/assets/input.html').read_text()
+    return makepdf(html)
 
 def generateSrt(words, filename="output"):
     """Generate a Srt file for video file."""

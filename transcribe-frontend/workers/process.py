@@ -1,21 +1,17 @@
 import os
 from django.conf import settings
+from django.core.mail import send_mail,EmailMessage
 from datetime import datetime
 import stripe
+import json
 import boto3
 from modules.download import voice
 from modules.parse import parse
-STRIPE_SECRET_KEY = 'sk_test_51ILA0WGzr6eXbH6PrW3FsnAFM55MZ4Eqg6FO464xyQu1WW8nlLpUTunnsdC8fWuNqGIuNkDoo57zyVq1EfXDr0iz00f5eztRR3'
-AWS_ACCESS_KEY_ID = 'AKIASOJFJ5RPYZJMYOOY'
-AWS_SECRET_ACCESS_KEY = '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'
-AWS_STORAGE_BUCKET_NAME = 'transcribe-now'
 
-ASSEMBLY_AI_KEY = '1fc3ded0edaa4851b288051bff6e56d5'
-stripe.api_key = STRIPE_SECRET_KEY
-checkout_list = stripe.checkout.Session.list()['data']
 
 def delete_files_job():
-
+    stripe.api_key = settings.STRIPE_SECRET_KEY
+    checkout_list = stripe.checkout.Session.list()['data']
     for checkout in checkout_list:
         if checkout['payment_status'] == 'unpaid':
             checkout_id = checkout['id']
@@ -30,14 +26,17 @@ def delete_files_job():
             if (td_days > 7):
                 filename = line_item['description']
                 # delete the file from S3 bucket
-                s3 = boto3.resource('s3', aws_access_key_id=AWS_ACCESS_KEY_ID, aws_secret_access_key=AWS_SECRET_ACCESS_KEY)
-                obj = s3.Object(AWS_STORAGE_BUCKET_NAME, 'uploads/'+filename)
+                #TODO: delete json file
+                s3 = boto3.resource('s3', aws_access_key_id=settings.AWS_ACCESS_KEY_ID, aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY)
+                obj = s3.Object(settings.AWS_STORAGE_BUCKET_NAME, 'uploads/'+filename)
                 obj.delete()
                 print('delete file',filename)
 
 
 def transcription_job():
-    ai = voice.AssemblyAi(ASSEMBLY_AI_KEY)
+    stripe.api_key = settings.STRIPE_SECRET_KEY
+    checkout_list = stripe.checkout.Session.list()['data']
+    ai = voice.AssemblyAi(settings.ASSEMBLY_AI_KEY)
 
     for checkout in checkout_list:
 
@@ -59,5 +58,26 @@ def transcription_job():
                         metadata={"status": "cancelled"},
                     )
 
-if __name__ == '__main__':
-     delete_files_job()
+
+def send_result_job():
+    stripe.api_key = settings.STRIPE_SECRET_KEY
+    checkout_list = stripe.checkout.Session.list()['data']
+
+    for checkout in checkout_list:
+        if(checkout['payment_status'] == 'paid'):
+            payment_intent_id = checkout['payment_intent']
+            payment_intent = stripe.PaymentIntent.retrieve(payment_intent_id)
+            payment_intent_status = payment_intent['metadata']['status']
+            tag = payment_intent['metadata']['tag']
+
+            if(payment_intent_status == 'polling'):
+                #get json file from s3 and generate pdf file
+                s3 = boto3.resource('s3', aws_access_key_id=settings.AWS_ACCESS_KEY_ID, aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY)
+                obj = s3.Object(settings.AWS_STORAGE_BUCKET_NAME, f'uploads/json/{tag}.json')
+
+                words = json.loads(obj.get()['Body'].read().decode('utf-8'))['words']
+                pdffile = parse.generatePDF(words)
+                # send email to customer
+                mail = EmailMessage('subject', 'message', 'andreii@picknmelt.com', ['pancyboxi@gmail.com',])
+                mail.attach('trascribe.pdf', pdffile, 'pdf/pdf')
+                mail.send()

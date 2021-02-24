@@ -20,5 +20,5 @@ def main():
 
 
 if __name__ == '__main__':
-    # main()
-    process.transcription_job()
+    main()
+    # process.transcription_job()
