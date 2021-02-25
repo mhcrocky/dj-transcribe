@@ -32,7 +32,7 @@ def delete_files_job():
                 obj.delete()
                 print('delete file',filename)
 
-
+#
 def transcription_job():
     stripe.api_key = settings.STRIPE_SECRET_KEY
     checkout_list = stripe.checkout.Session.list()['data']
@@ -58,7 +58,7 @@ def transcription_job():
                         metadata={"status": "cancelled"},
                     )
 
-
+#send email with result pdf file
 def send_result_job():
     stripe.api_key = settings.STRIPE_SECRET_KEY
     checkout_list = stripe.checkout.Session.list()['data']
@@ -72,12 +72,18 @@ def send_result_job():
 
             if(payment_intent_status == 'polling'):
                 #get json file from s3 and generate pdf file
+                subject = 'This is subject'
+                message = 'This is message'
+                
+                customer_email = payment_intent['billing_details']['email']
+                print(f'will send email to :{customer_email}')
+
                 s3 = boto3.resource('s3', aws_access_key_id=settings.AWS_ACCESS_KEY_ID, aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY)
                 obj = s3.Object(settings.AWS_STORAGE_BUCKET_NAME, f'uploads/json/{tag}.json')
-
                 words = json.loads(obj.get()['Body'].read().decode('utf-8'))['words']
+
                 pdffile = parse.generatePDF(words)
                 # send email to customer
-                mail = EmailMessage('subject', 'message', 'andreii@picknmelt.com', ['pancyboxi@gmail.com',])
+                mail = EmailMessage( subject , message , 'andreii@picknmelt.com', [customer_email,])
                 mail.attach('trascribe.pdf', pdffile, 'pdf/pdf')
                 mail.send()
