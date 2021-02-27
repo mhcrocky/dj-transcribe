@@ -15,6 +15,17 @@ import string
 
 from modules.download import voice
 
+
+def read_file(filename, chunk_size=5242880):
+    with open(filename, 'rb') as _file:
+        while True:
+            data = _file.read(chunk_size)
+            if not data:
+                break
+            yield data
+
+
+
 class HomePageView(TemplateView):
     template_name = 'home.html'
 
@@ -91,12 +102,30 @@ def create_checkout_session(request):
     if request.method == 'POST':
         post_data = json.loads(request.body.decode("utf-8"))
         print("Request payload: ", post_data)
-        video_length = post_data.get('length', 0)
-        video_link = post_data.get('url', 'www.youtube.com')
+        
         video_title = post_data.get('title', 'Youtube Video')
+        video_length = post_data.get('length', 0)
+        video_yt_link = post_data.get('url', 'www.youtube.com')
+        
+        video_name = ''.join(random.choice(string.ascii_uppercase + string.ascii_lowercase + string.digits) for _ in range(16))
+        yt = YouTube(video_yt_link)
+        video_link = video_name + ".mp3"
+        
+        stream = yt.streams.get_audio_only()
+        stream.download(filename='output')
+
+         # upload to S3 bucket
+        s3 = boto3.resource('s3', aws_access_key_id=settings.AWS_ACCESS_KEY_ID, aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY)
+        bucket = s3.Bucket(settings.AWS_STORAGE_BUCKET_NAME)
+        bucket.put_object(Key='uploads/' + video_link, Body=open('output.mp4', 'rb'))
+
+        ai = voice.AssemblyAi(settings.ASSEMBLY_AI_KEY)
+        
+        audio_url = "https://{settings.AWS_STORAGE_BUCKET_NAME}.s3.eu-west-3.amazonaws.com/uploads/{video_link}"
+        tag = ai.transcribe(audio_url)
         price = int(video_length/60) if (int(video_length/60) > 50) else 50
 
-        return stripe_request(request, video_title, video_link, price)
+        return stripe_request(request, video_title, video_link , tag , price)
 
 
 @csrf_exempt
