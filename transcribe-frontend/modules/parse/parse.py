@@ -64,6 +64,8 @@ def generateTxt(words, isTimeStamp=True, interVal=1, filename="output"):
 
     withFile.close()
 
+    return withFile
+
 def generatePDF(words, interVal=1, filename="output"):
     """Generate a PDF file from a string of HTML."""
     """ Param1: outputed srt file name """
@@ -161,6 +163,7 @@ def generateSrt(words, filename="output"):
         sentences.update({speaker: original + text + ' '})
 
     srtFile.close()
+    return srtFile
 
 def ParseJson(jsonPath):
     """return parsed Json from json file."""

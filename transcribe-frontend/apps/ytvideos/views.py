@@ -12,6 +12,7 @@ import boto3
 import mutagen
 import random
 import string
+from workers import process
 
 from modules.download import voice
 
@@ -121,7 +122,7 @@ def create_checkout_session(request):
 
         ai = voice.AssemblyAi(settings.ASSEMBLY_AI_KEY)
         
-        audio_url = "https://{settings.AWS_STORAGE_BUCKET_NAME}.s3.eu-west-3.amazonaws.com/uploads/{video_link}"
+        audio_url = f"https://{settings.AWS_STORAGE_BUCKET_NAME}.s3.eu-west-3.amazonaws.com/uploads/{video_link}"
         tag = ai.transcribe(audio_url)
         price = int(video_length/60) if (int(video_length/60) > 50) else 50
 
@@ -151,7 +152,7 @@ def create_checkout_mp3_session(request):
 
         ai = voice.AssemblyAi(settings.ASSEMBLY_AI_KEY)
         
-        audio_url = "https://{settings.AWS_STORAGE_BUCKET_NAME}.s3.eu-west-3.amazonaws.com/uploads/{video_title}"
+        audio_url = f"https://{settings.AWS_STORAGE_BUCKET_NAME}.s3.eu-west-3.amazonaws.com/uploads/{video_title}"
         tag = ai.transcribe(audio_url)
         return stripe_request(request, saved_file.name, video_title,tag, video_price)
 

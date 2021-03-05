@@ -74,14 +74,16 @@ def send_result_job():
                 #get json file from s3 and generate pdf file
                 subject = 'This is subject'
                 message = 'This is message'
-                
-                customer_email = payment_intent['billing_details']['email']
+                customer_email = checkout['customer_details']['email']
                 print(f'will send email to :{customer_email}')
 
                 s3 = boto3.resource('s3', aws_access_key_id=settings.AWS_ACCESS_KEY_ID, aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY)
                 obj = s3.Object(settings.AWS_STORAGE_BUCKET_NAME, f'uploads/json/{tag}.json')
                 words = json.loads(obj.get()['Body'].read().decode('utf-8'))['words']
+                print(json.loads(obj.get()['Body'].read().decode('utf-8')))
 
+                pdffile = parse.generatePDF(words)
+                pdffile = parse.generatePDF(words)
                 pdffile = parse.generatePDF(words)
                 # send email to customer
                 mail = EmailMessage( subject , message , 'andreii@picknmelt.com', [customer_email,])
