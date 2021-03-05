@@ -153,8 +153,8 @@ def create_checkout_mp3_session(request):
 
         ai = voice.AssemblyAi(settings.ASSEMBLY_AI_KEY)
         
-        # audio_url = f"https://{settings.AWS_STORAGE_BUCKET_NAME}.s3.eu-west-3.amazonaws.com/uploads/{video_title}"
-        audio_url = "https://s3-us-west-2.amazonaws.com/blog.assemblyai.com/audio/8-7-2018-post/7510.mp3"
+        audio_url = f"https://{settings.AWS_STORAGE_BUCKET_NAME}.s3.eu-west-3.amazonaws.com/uploads/{video_title}"
+        # audio_url = "https://s3-us-west-2.amazonaws.com/blog.assemblyai.com/audio/8-7-2018-post/7510.mp3"
         tag = ai.transcribe(audio_url)
         return stripe_request(request, saved_file.name, video_title,tag, video_price)
 
