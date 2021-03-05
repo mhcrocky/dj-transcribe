@@ -12,7 +12,6 @@ import boto3
 import mutagen
 import random
 import string
-from workers import process
 
 from modules.download import voice
 
@@ -43,44 +42,42 @@ class CancelledView(TemplateView):
 @csrf_exempt
 def retrieve_ytvideo_info(request):
     if request.method == 'GET':
-        # process.transcription_job()
-        process.send_result_job()
-        # video_url = request.GET.get('url', '')
-        # print("Youtube Link:", video_url)
-        # try:  
-        #     # object creation using YouTube 
-        #     yt = YouTube(video_url)
-        #     video_info = {
-        #       'title': yt.title,
-        #       'length': yt.length,
-        #       'description': yt.description,
-        #       'keywords': yt.keywords,
-        #       'author': yt.author,
-        #       'thumbnail_url': yt.thumbnail_url,
-        #       'publish_date': yt.publish_date,
-        #       'rating': yt.rating,
-        #       'url': video_url,
-        #     }
+        video_url = request.GET.get('url', '')
+        print("Youtube Link:", video_url)
+        try:  
+            # object creation using YouTube 
+            yt = YouTube(video_url)
+            video_info = {
+              'title': yt.title,
+              'length': yt.length,
+              'description': yt.description,
+              'keywords': yt.keywords,
+              'author': yt.author,
+              'thumbnail_url': yt.thumbnail_url,
+              'publish_date': yt.publish_date,
+              'rating': yt.rating,
+              'url': video_url,
+            }
 
-        #     # Test data for the frontend
-        #     # video_info = {
-        #     #   'title': 'Learn React JS - Full Course for Beginners - Tutorial 2019',
-        #     #   'length': 18334,
-        #     #   'description': "React.js is a JavaScript library for building dynamic web applications. Upon completion of this course, you'll know everything you need in order to build web applications in React.",
-        #     #   'keywords': '["react", "react full course", "react tutorial", "react.js", "tutorial"]',
-        #     #   'author': 'freeCodeCamp.org',
-        #     #   'thumbnail_url': 'https://i.ytimg.com/vi/DLX62G4lc44/maxresdefault.jpg',
-        #     #   'publish_date': '2018-12-18T00:00:00',
-        #     #   'rating': 4.9596257,
-        #     #   'url': video_url,
-        #     # }
-        #     response = JsonResponse(video_info, safe=False)
-        #     return response
-        # except:  
-        #     print("Connection Error")   # to handle exception
-        #     message = 'Bad request' 
-        #     response = JsonResponse({'status': 'error', 'message': message}, status=400)
-        #     return response
+            # Test data for the frontend
+            # video_info = {
+            #   'title': 'Learn React JS - Full Course for Beginners - Tutorial 2019',
+            #   'length': 18334,
+            #   'description': "React.js is a JavaScript library for building dynamic web applications. Upon completion of this course, you'll know everything you need in order to build web applications in React.",
+            #   'keywords': '["react", "react full course", "react tutorial", "react.js", "tutorial"]',
+            #   'author': 'freeCodeCamp.org',
+            #   'thumbnail_url': 'https://i.ytimg.com/vi/DLX62G4lc44/maxresdefault.jpg',
+            #   'publish_date': '2018-12-18T00:00:00',
+            #   'rating': 4.9596257,
+            #   'url': video_url,
+            # }
+            response = JsonResponse(video_info, safe=False)
+            return response
+        except:  
+            print("Connection Error")   # to handle exception
+            message = 'Bad request' 
+            response = JsonResponse({'status': 'error', 'message': message}, status=400)
+            return response
         
 
 # Send email on success payment
