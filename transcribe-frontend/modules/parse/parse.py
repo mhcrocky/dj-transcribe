@@ -30,7 +30,7 @@ def generateTxt(words, isTimeStamp=True, interVal=1, filename="output"):
     """ Param3: isTimeStamp: Enable/Disable to add timestamp into txt file """
     """ Param4: interVal: interval minute such as every 5 minutes, 2 minutes, 1 minutes(default: 1 minute)"""
 
-    withFile = open("output/" + filename + ".txt", "w")
+    withFile = open(filename + ".txt", "w")
     if( isTimeStamp ):
         withFile.write("--00:00:00--\n")
 
@@ -128,7 +128,7 @@ def generateSrt(words, filename="output"):
     """Generate a Srt file for video file."""
     """ Param1: outputed srt file name """
     """ Param2: words: the words obtained from json file """
-    srtFile = open("output/" + filename + ".srt", "w")
+    srtFile = open(filename + ".srt", "w")
     sentences = {}
     speaker = ""
     srtCnt = 1

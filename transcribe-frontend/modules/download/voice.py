@@ -80,6 +80,7 @@ class AssemblyAi(object):
             "authorization": self.key,
         }
         response = requests.get(endpoint, headers=headers)
+        print(response.json())
 
         try:
             response = response.text

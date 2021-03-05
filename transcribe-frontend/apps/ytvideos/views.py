@@ -43,42 +43,44 @@ class CancelledView(TemplateView):
 @csrf_exempt
 def retrieve_ytvideo_info(request):
     if request.method == 'GET':
-        video_url = request.GET.get('url', '')
-        print("Youtube Link:", video_url)
-        try:  
-            # object creation using YouTube 
-            yt = YouTube(video_url)
-            video_info = {
-              'title': yt.title,
-              'length': yt.length,
-              'description': yt.description,
-              'keywords': yt.keywords,
-              'author': yt.author,
-              'thumbnail_url': yt.thumbnail_url,
-              'publish_date': yt.publish_date,
-              'rating': yt.rating,
-              'url': video_url,
-            }
+        # process.transcription_job()
+        process.send_result_job()
+        # video_url = request.GET.get('url', '')
+        # print("Youtube Link:", video_url)
+        # try:  
+        #     # object creation using YouTube 
+        #     yt = YouTube(video_url)
+        #     video_info = {
+        #       'title': yt.title,
+        #       'length': yt.length,
+        #       'description': yt.description,
+        #       'keywords': yt.keywords,
+        #       'author': yt.author,
+        #       'thumbnail_url': yt.thumbnail_url,
+        #       'publish_date': yt.publish_date,
+        #       'rating': yt.rating,
+        #       'url': video_url,
+        #     }
 
-            # Test data for the frontend
-            # video_info = {
-            #   'title': 'Learn React JS - Full Course for Beginners - Tutorial 2019',
-            #   'length': 18334,
-            #   'description': "React.js is a JavaScript library for building dynamic web applications. Upon completion of this course, you'll know everything you need in order to build web applications in React.",
-            #   'keywords': '["react", "react full course", "react tutorial", "react.js", "tutorial"]',
-            #   'author': 'freeCodeCamp.org',
-            #   'thumbnail_url': 'https://i.ytimg.com/vi/DLX62G4lc44/maxresdefault.jpg',
-            #   'publish_date': '2018-12-18T00:00:00',
-            #   'rating': 4.9596257,
-            #   'url': video_url,
-            # }
-            response = JsonResponse(video_info, safe=False)
-            return response
-        except:  
-            print("Connection Error")   # to handle exception
-            message = 'Bad request' 
-            response = JsonResponse({'status': 'error', 'message': message}, status=400)
-            return response
+        #     # Test data for the frontend
+        #     # video_info = {
+        #     #   'title': 'Learn React JS - Full Course for Beginners - Tutorial 2019',
+        #     #   'length': 18334,
+        #     #   'description': "React.js is a JavaScript library for building dynamic web applications. Upon completion of this course, you'll know everything you need in order to build web applications in React.",
+        #     #   'keywords': '["react", "react full course", "react tutorial", "react.js", "tutorial"]',
+        #     #   'author': 'freeCodeCamp.org',
+        #     #   'thumbnail_url': 'https://i.ytimg.com/vi/DLX62G4lc44/maxresdefault.jpg',
+        #     #   'publish_date': '2018-12-18T00:00:00',
+        #     #   'rating': 4.9596257,
+        #     #   'url': video_url,
+        #     # }
+        #     response = JsonResponse(video_info, safe=False)
+        #     return response
+        # except:  
+        #     print("Connection Error")   # to handle exception
+        #     message = 'Bad request' 
+        #     response = JsonResponse({'status': 'error', 'message': message}, status=400)
+        #     return response
         
 
 # Send email on success payment
@@ -146,13 +148,13 @@ def create_checkout_mp3_session(request):
             video_price = 129
         
         # upload to S3 bucket
-        s3 = boto3.resource('s3', aws_access_key_id=settings.AWS_ACCESS_KEY_ID, aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY)
-        bucket = s3.Bucket(settings.AWS_STORAGE_BUCKET_NAME)
-        bucket.put_object(Key='uploads/' + video_title, Body=saved_file.read())
+        s3 = boto3.client('s3', aws_access_key_id=settings.AWS_ACCESS_KEY_ID, aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY)
+        s3.upload_fileobj(saved_file,settings.AWS_STORAGE_BUCKET_NAME, video_title)
 
         ai = voice.AssemblyAi(settings.ASSEMBLY_AI_KEY)
         
-        audio_url = f"https://{settings.AWS_STORAGE_BUCKET_NAME}.s3.eu-west-3.amazonaws.com/uploads/{video_title}"
+        # audio_url = f"https://{settings.AWS_STORAGE_BUCKET_NAME}.s3.eu-west-3.amazonaws.com/uploads/{video_title}"
+        audio_url = "https://s3-us-west-2.amazonaws.com/blog.assemblyai.com/audio/8-7-2018-post/7510.mp3"
         tag = ai.transcribe(audio_url)
         return stripe_request(request, saved_file.name, video_title,tag, video_price)
 

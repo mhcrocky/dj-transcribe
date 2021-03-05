@@ -37,9 +37,8 @@ def transcription_job():
     stripe.api_key = settings.STRIPE_SECRET_KEY
     checkout_list = stripe.checkout.Session.list()['data']
     ai = voice.AssemblyAi(settings.ASSEMBLY_AI_KEY)
-
+    print('transcribe_job')
     for checkout in checkout_list:
-
         if(checkout['payment_status'] == 'paid'):
             payment_intent_id = checkout['payment_intent']
             
@@ -80,12 +79,20 @@ def send_result_job():
                 s3 = boto3.resource('s3', aws_access_key_id=settings.AWS_ACCESS_KEY_ID, aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY)
                 obj = s3.Object(settings.AWS_STORAGE_BUCKET_NAME, f'uploads/json/{tag}.json')
                 words = json.loads(obj.get()['Body'].read().decode('utf-8'))['words']
-                print(json.loads(obj.get()['Body'].read().decode('utf-8')))
 
+                txtfile = parse.generateTxt(words,isTimeStamp=True)
                 pdffile = parse.generatePDF(words)
-                pdffile = parse.generatePDF(words)
-                pdffile = parse.generatePDF(words)
+                srtfile = parse.generateSrt(words)
+
                 # send email to customer
                 mail = EmailMessage( subject , message , 'andreii@picknmelt.com', [customer_email,])
                 mail.attach('trascribe.pdf', pdffile, 'pdf/pdf')
+                mail.attach('trascribe.txt', txtfile, 'txt/txt')
+                mail.attach('trascribe.srt', srtfile, 'srt/srt')
                 mail.send()
+
+                #set state to finished
+                stripe.PaymentIntent.modify(
+                    payment_intent_id,
+                    metadata={"status": "finished"},
+                )
